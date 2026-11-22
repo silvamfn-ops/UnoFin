@@ -14,6 +14,9 @@
   <link rel="apple-touch-icon" href="icon.svg" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
 
+  <!-- PDF.js para leitura local de extratos bancários -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     :root {
       --bg-primary: #f8fafc;
@@ -29,6 +32,7 @@
       --danger: #ef4444;
       --danger-soft: rgba(239, 68, 68, 0.12);
       --warning: #f59e0b;
+      --warning-soft: rgba(245, 158, 11, 0.14);
       --info: #3b82f6;
       --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
       --safe-top: env(safe-area-inset-top, 20px);
@@ -49,6 +53,7 @@
       --danger: #f87171;
       --danger-soft: rgba(248, 113, 113, 0.15);
       --warning: #fbbf24;
+      --warning-soft: rgba(251, 191, 36, 0.15);
       --info: #60a5fa;
       --shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
     }
@@ -185,10 +190,31 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
+    .balance-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .balance-title {
       font-size: 13px;
       color: #94a3b8;
       font-weight: 500;
+    }
+
+    .reconcile-pill {
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 99px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .reconcile-pill:active {
+      transform: scale(0.95);
     }
 
     .balance-amount {
@@ -196,6 +222,8 @@
       font-weight: 800;
       letter-spacing: -0.8px;
       margin: 6px 0 16px;
+      cursor: pointer;
+      display: inline-block;
     }
 
     .balance-grid {
@@ -522,7 +550,7 @@
       padding: 20px 20px calc(24px + var(--safe-bottom));
       border-top: 1px solid var(--border-color);
       animation: slideUp 0.22s ease-out;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
     }
 
@@ -654,6 +682,84 @@
     .view-section.active {
       display: block;
     }
+
+    /* Pré-visualização Importação PDF */
+    .pdf-preview-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 52vh;
+      overflow-y: auto;
+      margin-bottom: 14px;
+    }
+
+    .pdf-row {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 13px;
+      padding: 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pdf-row.is-dup {
+      border-color: var(--warning);
+      background: var(--warning-soft);
+    }
+
+    .pdf-row-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pdf-row-top input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .pdf-row-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .pdf-row-desc {
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pdf-row-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .dup-badge {
+      display: inline-block;
+      background: var(--warning);
+      color: #0f172a;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 4px;
+    }
+
+    .pdf-cat-select {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -664,6 +770,8 @@
       <h1>UnoFin</h1>
     </div>
     <div class="header-actions">
+      <button class="icon-btn" id="importPdfBtn" title="Importar Extrato PDF">📄</button>
+      <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" style="display:none;" />
       <button class="icon-btn" id="themeToggle" title="Alternar Tema">☀️</button>
       <button class="icon-btn" id="openSettingsBtn" title="Definições e Backup">⚙️</button>
     </div>
@@ -683,8 +791,11 @@
     <!-- Vista Principal: Resumo e Movimentos -->
     <section id="viewDashboard" class="view-section active">
       <div class="balance-card">
-        <div class="balance-title">Saldo do Ciclo Atual</div>
-        <div class="balance-amount" id="cycleBalance">0,00 €</div>
+        <div class="balance-header-row">
+          <span class="balance-title">Saldo do Ciclo Atual</span>
+          <button type="button" class="reconcile-pill" id="openReconcileBtn">⚖️ Acertar Saldo</button>
+        </div>
+        <div class="balance-amount" id="cycleBalance" title="Toca para acertar com o saldo real do banco">0,00 €</div>
         <div class="balance-grid">
           <div class="stat-box">
             <span class="stat-label">▲ Receitas</span>
@@ -815,6 +926,43 @@
     </div>
   </div>
 
+  <!-- Modal Acerto Rápido de Saldo (Reconciliação) -->
+  <div class="modal-backdrop" id="reconcileModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title">⚖️ Acerto de Saldo Real</span>
+        <button class="icon-btn" id="closeReconcileBtn">✕</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
+        Introduz o saldo atual visível na app do teu banco. Se existir diferença, o UnoFin cria automaticamente um movimento de ajuste neste ciclo.
+      </p>
+      <div class="form-group">
+        <label>Saldo Atual no UnoFin</label>
+        <input type="text" id="reconcileCurrentDisplay" class="form-control" disabled />
+      </div>
+      <div class="form-group">
+        <label for="reconcileRealInput">Saldo Real no Banco (€)</label>
+        <input type="number" step="0.01" id="reconcileRealInput" class="form-control" placeholder="0.00" />
+      </div>
+      <button type="button" class="btn-primary" id="confirmReconcileBtn">Aplicar Acerto</button>
+    </div>
+  </div>
+
+  <!-- Modal Pré-visualização de Extrato PDF -->
+  <div class="modal-backdrop" id="pdfModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title" id="pdfModalTitle">Importar Extrato PDF</span>
+        <button class="icon-btn" id="closePdfModalBtn">✕</button>
+      </div>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+        Altera qualquer categoria abaixo para a app memorizar automaticamente nas próximas importações.
+      </p>
+      <div class="pdf-preview-list" id="pdfPreviewList"></div>
+      <button type="button" class="btn-primary" id="confirmPdfImportBtn">Importar Selecionados</button>
+    </div>
+  </div>
+
   <!-- Modal Definições & Backup Local -->
   <div class="modal-backdrop" id="settingsModal">
     <div class="modal-sheet">
@@ -837,7 +985,7 @@
 
       <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
         <label style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:10px;">
-          Segurança de Dados (100% Local no iPhone)
+          Segurança de Dados (IndexedDB Local no iPhone)
         </label>
         <button type="button" class="btn-secondary" id="exportJsonBtn">📤 Exportar Backup (.json)</button>
         <button type="button" class="btn-secondary" id="importJsonBtn">📥 Restaurar Backup (.json)</button>
@@ -847,7 +995,12 @@
   </div>
 
   <script>
-    // --- Configuração e Categorias ---
+    // --- Configuração PDF.js ---
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
+    // --- Categorias ---
     const CATEGORIES = {
       expense: [
         { id: 'alimentacao', name: 'Alimentação & Supermercado', icon: '🛒', color: '#10b981' },
@@ -866,7 +1019,47 @@
       ]
     };
 
-    const STORAGE_KEY = 'unofin_data_v1';
+    const DEFAULT_RULES = [
+      { kw: 'CONTINENTE', cat: 'alimentacao' },
+      { kw: 'PINGO DOCE', cat: 'alimentacao' },
+      { kw: 'LIDL', cat: 'alimentacao' },
+      { kw: 'ALDI', cat: 'alimentacao' },
+      { kw: 'MERCADONA', cat: 'alimentacao' },
+      { kw: 'INTERMARCHE', cat: 'alimentacao' },
+      { kw: 'AUCHAN', cat: 'alimentacao' },
+      { kw: 'GALP', cat: 'transportes' },
+      { kw: 'REPSOL', cat: 'transportes' },
+      { kw: 'BP ', cat: 'transportes' },
+      { kw: 'PRIO', cat: 'transportes' },
+      { kw: 'VIA VERDE', cat: 'transportes' },
+      { kw: 'UBER', cat: 'transportes' },
+      { kw: 'BOLT', cat: 'transportes' },
+      { kw: 'EDP', cat: 'habitacao' },
+      { kw: 'ENDESA', cat: 'habitacao' },
+      { kw: 'GOLDENERGY', cat: 'habitacao' },
+      { kw: 'EPAL', cat: 'habitacao' },
+      { kw: 'SMAS', cat: 'habitacao' },
+      { kw: 'MEO', cat: 'habitacao' },
+      { kw: 'NOS', cat: 'habitacao' },
+      { kw: 'VODAFONE', cat: 'habitacao' },
+      { kw: 'FARMACIA', cat: 'saude' },
+      { kw: 'WELLS', cat: 'saude' },
+      { kw: 'RESTAURANTE', cat: 'lazer' },
+      { kw: 'CAFE', cat: 'lazer' },
+      { kw: 'PASTELARIA', cat: 'lazer' },
+      { kw: 'MCDONALDS', cat: 'lazer' },
+      { kw: 'AMAZON', cat: 'compras' },
+      { kw: 'WORTEN', cat: 'compras' },
+      { kw: 'DECATHLON', cat: 'compras' },
+      { kw: 'IKEA', cat: 'compras' },
+      { kw: 'VENCIMENTO', cat: 'salario' },
+      { kw: 'ORDENADO', cat: 'salario' },
+      { kw: 'SALARIO', cat: 'salario' }
+    ];
+
+    const LEGACY_STORAGE_KEY = 'unofin_data_v1';
+    const IDB_NAME = 'UnoFinDB';
+    const IDB_STORE = 'appState';
 
     let state = {
       settings: {
@@ -875,31 +1068,83 @@
         theme: 'dark'
       },
       transactions: [],
+      learnedRules: {},
       cycleOffset: 0
     };
 
     let currentTxType = 'expense';
+    let parsedPdfItems = [];
 
-    // --- Inicialização ---
-    function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          state.settings = { ...state.settings, ...(parsed.settings || {}) };
-          state.transactions = Array.isArray(parsed.transactions) ? parsed.transactions : [];
-        } catch (e) {
-          console.error('Erro ao ler dados locais:', e);
+    // --- Camada IndexedDB (com migração transparente do localStorage) ---
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) {
+            db.createObjectStore(IDB_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function idbGet(key) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readonly');
+        const req = tx.objectStore(IDB_STORE).get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function idbSet(key, val) {
+      const db = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(IDB_STORE, 'readwrite');
+        const req = tx.objectStore(IDB_STORE).put(val, key);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function loadState() {
+      try {
+        let saved = await idbGet('main');
+        if (!saved) {
+          const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (legacy) {
+            saved = JSON.parse(legacy);
+            await idbSet('main', saved);
+          }
         }
+        if (saved) {
+          state.settings = { ...state.settings, ...(saved.settings || {}) };
+          state.transactions = Array.isArray(saved.transactions) ? saved.transactions : [];
+          state.learnedRules = saved.learnedRules && typeof saved.learnedRules === 'object' ? saved.learnedRules : {};
+        }
+      } catch (e) {
+        console.error('Erro ao carregar base de dados local:', e);
       }
       applyTheme(state.settings.theme);
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    async function saveState() {
+      const payload = {
         settings: state.settings,
-        transactions: state.transactions
-      }));
+        transactions: state.transactions,
+        learnedRules: state.learnedRules
+      };
+      try {
+        await idbSet('main', payload);
+      } catch (e) {
+        console.error('Erro ao gravar no IndexedDB:', e);
+      }
+      try {
+        localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(payload));
+      } catch (_) {}
     }
 
     function applyTheme(theme) {
@@ -909,7 +1154,7 @@
       if (metaTheme) metaTheme.setAttribute('content', theme === 'dark' ? '#090d16' : '#f8fafc');
     }
 
-    // --- Lógica de Ciclos Mensais (ex: dia 21 a dia 20) ---
+    // --- Lógica de Ciclos Mensais ---
     function getCycleRange(offset = 0) {
       const startDay = Math.min(28, Math.max(1, parseInt(state.settings.cycleStartDay) || 21));
       const today = new Date();
@@ -939,11 +1184,8 @@
       return list.find(c => c.id === id) || { id, name: 'Geral', icon: '📌', color: '#64748b' };
     }
 
-    // --- Renderização ---
-    function render() {
-      const { start, end } = getCycleRange(state.cycleOffset);
-      document.getElementById('cycleLabelText').textContent = `${formatDateShort(start)} — ${formatDateShort(end)}`;
-
+    function getCycleSummary(offset = state.cycleOffset) {
+      const { start, end } = getCycleRange(offset);
       const cycleTxs = state.transactions.filter(tx => {
         const d = new Date(tx.date + 'T12:00:00');
         return d >= start && d <= end;
@@ -956,12 +1198,18 @@
         else expense += Number(tx.amount);
       });
 
-      const balance = income - expense;
+      return { start, end, cycleTxs, income, expense, balance: income - expense };
+    }
+
+    // --- Renderização ---
+    function render() {
+      const { start, end, cycleTxs, income, expense, balance } = getCycleSummary(state.cycleOffset);
+      document.getElementById('cycleLabelText').textContent = `${formatDateShort(start)} — ${formatDateShort(end)}`;
+
       document.getElementById('cycleBalance').textContent = formatCurrency(balance);
       document.getElementById('cycleIncome').textContent = formatCurrency(income);
       document.getElementById('cycleExpense').textContent = formatCurrency(expense);
 
-      // Barra de Orçamento
       const limit = Number(state.settings.monthlyBudget) || 0;
       const pct = limit > 0 ? Math.min(100, Math.round((expense / limit) * 100)) : 0;
       const bar = document.getElementById('budgetBar');
@@ -972,7 +1220,6 @@
       document.getElementById('budgetSpentText').textContent = `Gasto: ${formatCurrency(expense)}`;
       document.getElementById('budgetLimitText').textContent = `Limite: ${formatCurrency(limit)}`;
 
-      // Filtros
       const search = document.getElementById('searchInput').value.trim().toLowerCase();
       const catFilter = document.getElementById('categoryFilter').value;
 
@@ -986,7 +1233,7 @@
       txListEl.innerHTML = '';
 
       if (filteredTxs.length === 0) {
-        txListEl.innerHTML = `<div class="empty-state">Sem movimentos registados neste ciclo.<br>Toca em <strong>+</strong> para adicionar.</div>`;
+        txListEl.innerHTML = `<div class="empty-state">Sem movimentos registados neste ciclo.<br>Toca em <strong>+</strong> para adicionar ou em <strong>📄</strong> para importar PDF.</div>`;
       } else {
         filteredTxs.forEach(tx => {
           const cat = getCategoryObj(tx.type, tx.category);
@@ -1145,11 +1392,288 @@
       }[m]));
     }
 
-    // --- Event Listeners ---
-    document.getElementById('themeToggle').addEventListener('click', () => {
+    // --- Acerto Rápido de Saldo (Reconciliação) ---
+    function openReconcileModal() {
+      const { balance } = getCycleSummary(state.cycleOffset);
+      document.getElementById('reconcileCurrentDisplay').value = formatCurrency(balance);
+      document.getElementById('reconcileRealInput').value = balance.toFixed(2);
+      document.getElementById('reconcileModal').classList.add('open');
+    }
+
+    document.getElementById('openReconcileBtn').addEventListener('click', openReconcileModal);
+    document.getElementById('cycleBalance').addEventListener('click', openReconcileModal);
+    document.getElementById('closeReconcileBtn').addEventListener('click', () => {
+      document.getElementById('reconcileModal').classList.remove('open');
+    });
+
+    document.getElementById('confirmReconcileBtn').addEventListener('click', async () => {
+      const realVal = parseFloat(document.getElementById('reconcileRealInput').value);
+      if (isNaN(realVal)) return;
+
+      const { balance, start, end } = getCycleSummary(state.cycleOffset);
+      const diff = Math.round((realVal - balance) * 100) / 100;
+
+      if (Math.abs(diff) < 0.01) {
+        alert('O saldo já está certo! Não há diferença a ajustar.');
+        document.getElementById('reconcileModal').classList.remove('open');
+        return;
+      }
+
+      const today = new Date();
+      let txDate = today.toISOString().slice(0, 10);
+      if (today < start || today > end) {
+        txDate = end.toISOString().slice(0, 10);
+      }
+
+      state.transactions.push({
+        id: 'tx_rec_' + Date.now(),
+        type: diff > 0 ? 'income' : 'expense',
+        amount: Math.abs(diff),
+        description: 'Acerto de Saldo (Reconciliação)',
+        category: diff > 0 ? 'reembolso' : 'outros_desp',
+        date: txDate
+      });
+
+      await saveState();
+      document.getElementById('reconcileModal').classList.remove('open');
+      render();
+    });
+
+    // --- Importação PDF com Aprendizagem & Deteção de Duplicados (±3 dias) ---
+    function normalizeMerchantKey(desc) {
+      return desc
+        .toUpperCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/(COMPRA|PAGAMENTO|MB|MULTIBANCO|CARTAO|DEB|CRED|TRF|TRANSFERENCIA|POS|TPA)/g, ' ')
+        .replace(/[0-9*#/-]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 28);
+    }
+
+    function predictCategory(type, description) {
+      const normKey = normalizeMerchantKey(description);
+      const upperDesc = description.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+      if (normKey && state.learnedRules[normKey]) {
+        const learned = state.learnedRules[normKey];
+        if ((CATEGORIES[type] || []).some(c => c.id === learned)) {
+          return learned;
+        }
+      }
+      for (const [key, catId] of Object.entries(state.learnedRules)) {
+        if (key.length >= 4 && upperDesc.includes(key)) {
+          if ((CATEGORIES[type] || []).some(c => c.id === catId)) {
+            return catId;
+          }
+        }
+      }
+
+      for (const rule of DEFAULT_RULES) {
+        if (upperDesc.includes(rule.kw)) {
+          if ((CATEGORIES[type] || []).some(c => c.id === rule.cat)) {
+            return rule.cat;
+          }
+        }
+      }
+
+      return type === 'income' ? 'outros_rec' : 'outros_desp';
+    }
+
+    function isDuplicateCandidate(dateStr, amount, type) {
+      const targetTime = new Date(dateStr + 'T12:00:00').getTime();
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+
+      return state.transactions.some(tx => {
+        if (tx.type !== type) return false;
+        if (Math.abs(Number(tx.amount) - amount) > 0.01) return false;
+        const txTime = new Date(tx.date + 'T12:00:00').getTime();
+        return Math.abs(txTime - targetTime) <= threeDaysMs;
+      });
+    }
+
+    function parseAmountPt(raw) {
+      const cleaned = raw.replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+      return parseFloat(cleaned);
+    }
+
+    function parseDatePt(rawDate, defaultYear) {
+      const parts = rawDate.split(/[/-]/);
+      const day = parts[0].padStart(2, '0');
+      const month = parts[1].padStart(2, '0');
+      let year = parts[2] ? parts[2] : String(defaultYear);
+      if (year.length === 2) year = '20' + year;
+      return `${year}-${month}-${day}`;
+    }
+
+    async function extractTransactionsFromPdf(file) {
+      if (!window.pdfjsLib) {
+        alert('O leitor de PDF ainda está a carregar. Tenta novamente dentro de segundos.');
+        return [];
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const defaultYear = new Date().getFullYear();
+      const items = [];
+
+      for (let p = 1; p <= pdf.numPages; p++) {
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+
+        const linesMap = {};
+        content.items.forEach(item => {
+          const y = Math.round(item.transform[5] / 4) * 4;
+          if (!linesMap[y]) linesMap[y] = [];
+          linesMap[y].push({ x: item.transform[4], str: item.str });
+        });
+
+        const sortedYs = Object.keys(linesMap).map(Number).sort((a, b) => b - a);
+
+        for (const y of sortedYs) {
+          const lineText = linesMap[y]
+            .sort((a, b) => a.x - b.x)
+            .map(i => i.str)
+            .join(' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+          const dateMatch = lineText.match(/^(\d{2}[/-]\d{2}(?:[/-]\d{2,4})?)\s+(.+)$/);
+          if (!dateMatch) continue;
+
+          const rest = dateMatch[2];
+          if (/SALDO\s+(INICIAL|FINAL|ANTERIOR|DISPONIVEL|CONTABILISTICO)/i.test(rest)) continue;
+
+          const amountMatches = [...rest.matchAll(/([+-]?\s*\d{1,3}(?:\.\d{3})*,\d{2})\s*€?/g)];
+          if (amountMatches.length === 0) continue;
+
+          const chosenMatch = amountMatches[0];
+          const rawVal = chosenMatch[1];
+          const numericVal = parseAmountPt(rawVal);
+          if (isNaN(numericVal) || numericVal === 0) continue;
+
+          let desc = rest.slice(0, chosenMatch.index).trim();
+          desc = desc.replace(/^\d{2}[/-]\d{2}(?:[/-]\d{2,4})?\s+/, '').trim();
+          if (desc.length < 2) continue;
+
+          const isIncome = rawVal.includes('+') || /(CRED|TRF RECEBIDA|VENCIMENTO|REEMBOLSO|JUROS)/i.test(desc);
+          const type = isIncome ? 'income' : 'expense';
+          const amount = Math.abs(numericVal);
+          const date = parseDatePt(dateMatch[1], defaultYear);
+          const dup = isDuplicateCandidate(date, amount, type);
+
+          items.push({
+            date,
+            description: desc,
+            amount,
+            type,
+            category: predictCategory(type, desc),
+            isDuplicate: dup,
+            selected: !dup
+          });
+        }
+      }
+
+      return items;
+    }
+
+    function renderPdfPreviewModal() {
+      const container = document.getElementById('pdfPreviewList');
+      container.innerHTML = '';
+
+      parsedPdfItems.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'pdf-row' + (item.isDuplicate ? ' is-dup' : '');
+
+        const catOptions = (CATEGORIES[item.type] || []).map(c =>
+          `<option value="${c.id}" ${c.id === item.category ? 'selected' : ''}>${c.icon} ${c.name}</option>`
+        ).join('');
+
+        row.innerHTML = `
+          <div class="pdf-row-top">
+            <input type="checkbox" data-idx="${idx}" ${item.selected ? 'checked' : ''} />
+            <div class="pdf-row-info">
+              <div class="pdf-row-desc">${escapeHtml(item.description)}</div>
+              <div class="pdf-row-meta">
+                ${item.date} • <strong>${item.type === 'income' ? '+' : '-'}${formatCurrency(item.amount)}</strong>
+                ${item.isDuplicate ? '<span class="dup-badge">⚠️ Possível duplicado (±3d)</span>' : ''}
+              </div>
+            </div>
+          </div>
+          <select class="pdf-cat-select" data-idx="${idx}">${catOptions}</select>
+        `;
+
+        row.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
+          parsedPdfItems[idx].selected = e.target.checked;
+        });
+
+        row.querySelector('select').addEventListener('change', (e) => {
+          const newCat = e.target.value;
+          parsedPdfItems[idx].category = newCat;
+          const normKey = normalizeMerchantKey(parsedPdfItems[idx].description);
+          if (normKey) {
+            state.learnedRules[normKey] = newCat;
+          }
+        });
+
+        container.appendChild(row);
+      });
+
+      document.getElementById('pdfModalTitle').textContent = `Extrato PDF (${parsedPdfItems.length} movimentos)`;
+      document.getElementById('pdfModal').classList.add('open');
+    }
+
+    document.getElementById('importPdfBtn').addEventListener('click', () => {
+      document.getElementById('pdfFileInput').click();
+    });
+
+    document.getElementById('pdfFileInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        parsedPdfItems = await extractTransactionsFromPdf(file);
+        if (parsedPdfItems.length === 0) {
+          alert('Não foram detetados movimentos legíveis neste PDF. Verifica se o ficheiro tem texto selecionável.');
+        } else {
+          renderPdfPreviewModal();
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao processar o ficheiro PDF.');
+      }
+      e.target.value = '';
+    });
+
+    document.getElementById('closePdfModalBtn').addEventListener('click', () => {
+      document.getElementById('pdfModal').classList.remove('open');
+    });
+
+    document.getElementById('confirmPdfImportBtn').addEventListener('click', async () => {
+      const toImport = parsedPdfItems.filter(i => i.selected);
+      toImport.forEach((item, idx) => {
+        state.transactions.push({
+          id: 'tx_pdf_' + Date.now() + '_' + idx,
+          type: item.type,
+          amount: item.amount,
+          description: item.description,
+          category: item.category,
+          date: item.date
+        });
+      });
+
+      await saveState();
+      document.getElementById('pdfModal').classList.remove('open');
+      render();
+      if (toImport.length > 0) {
+        alert(`${toImport.length} movimento(s) importado(s) com sucesso!`);
+      }
+    });
+
+    // --- Event Listeners Gerais ---
+    document.getElementById('themeToggle').addEventListener('click', async () => {
       state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
       applyTheme(state.settings.theme);
-      saveState();
+      await saveState();
     });
 
     document.getElementById('prevCycleBtn').addEventListener('click', () => {
@@ -1185,7 +1709,7 @@
       btn.addEventListener('click', () => setModalType(btn.dataset.type));
     });
 
-    document.getElementById('txForm').addEventListener('submit', (e) => {
+    document.getElementById('txForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const id = document.getElementById('txId').value;
       const amount = parseFloat(document.getElementById('txAmount').value);
@@ -1194,6 +1718,11 @@
       const date = document.getElementById('txDate').value;
 
       if (!amount || amount <= 0 || !description || !date) return;
+
+      const normKey = normalizeMerchantKey(description);
+      if (normKey) {
+        state.learnedRules[normKey] = category;
+      }
 
       if (id) {
         const idx = state.transactions.findIndex(t => t.id === id);
@@ -1211,16 +1740,16 @@
         });
       }
 
-      saveState();
+      await saveState();
       document.getElementById('txModal').classList.remove('open');
       render();
     });
 
-    document.getElementById('deleteTxBtn').addEventListener('click', () => {
+    document.getElementById('deleteTxBtn').addEventListener('click', async () => {
       const id = document.getElementById('txId').value;
       if (id && confirm('Eliminar este movimento?')) {
         state.transactions = state.transactions.filter(t => t.id !== id);
-        saveState();
+        await saveState();
         document.getElementById('txModal').classList.remove('open');
         render();
       }
@@ -1237,13 +1766,13 @@
       document.getElementById('settingsModal').classList.remove('open');
     });
 
-    document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+    document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
       const day = parseInt(document.getElementById('cycleStartDayInput').value) || 21;
       const budget = parseFloat(document.getElementById('monthlyBudgetInput').value) || 0;
       state.settings.cycleStartDay = Math.min(28, Math.max(1, day));
       state.settings.monthlyBudget = Math.max(0, budget);
       state.cycleOffset = 0;
-      saveState();
+      await saveState();
       document.getElementById('settingsModal').classList.remove('open');
       render();
     });
@@ -1251,9 +1780,11 @@
     document.getElementById('exportJsonBtn').addEventListener('click', () => {
       const dataStr = JSON.stringify({
         app: 'UnoFin',
+        version: '2.3',
         exportedAt: new Date().toISOString(),
         settings: state.settings,
-        transactions: state.transactions
+        transactions: state.transactions,
+        learnedRules: state.learnedRules
       }, null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -1274,7 +1805,7 @@
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = async (ev) => {
         try {
           const imported = JSON.parse(ev.target.result);
           if (Array.isArray(imported.transactions)) {
@@ -1282,7 +1813,10 @@
             if (imported.settings) {
               state.settings = { ...state.settings, ...imported.settings };
             }
-            saveState();
+            if (imported.learnedRules) {
+              state.learnedRules = { ...state.learnedRules, ...imported.learnedRules };
+            }
+            await saveState();
             applyTheme(state.settings.theme);
             render();
             alert('Backup restaurado com sucesso!');
@@ -1305,10 +1839,12 @@
       });
     }
 
-    // Arranque
-    loadState();
-    populateCategorySelects();
-    render();
+    // Arranque Assíncrono
+    (async function init() {
+      await loadState();
+      populateCategorySelects();
+      render();
+    })();
   </script>
 </body>
 </html>
