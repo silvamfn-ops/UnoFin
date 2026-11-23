@@ -1,21 +1,19 @@
-# UnoFin v2.3 — Gestão Orçamental Individual (PWA para iPhone)
+# UnoFin v2.4 — Gestão Orçamental Individual (PWA para iPhone)
 
-Aplicação web progressiva (PWA) focada na gestão financeira pessoal de um único utilizador, com funcionamento 100% local e offline no iPhone.
+Aplicação web progressiva (PWA) focada na gestão financeira pessoal de um único utilizador, reunindo a simplicidade de utilização individual com as melhores valências funcionais do DuoFin 2 (100% local e offline no iPhone).
 
-## Novidades da versão 2.3
-- **Importação de Extratos PDF com Aprendizagem:** Lê extratos bancários em PDF localmente no navegador e memoriza automaticamente as categorias corrigidas pelo utilizador.
-- **Deteção de Duplicados (±3 Dias):** Identifica movimentos com o mesmo montante num intervalo de até 3 dias antes ou depois de registos existentes.
-- **Acerto Rápido de Saldo (Reconciliação):** Permite alinhar o saldo do ciclo atual com o saldo real do banco num toque.
-- **Armazenamento IndexedDB:** Maior capacidade e proteção contra limpezas de cache no iOS, com migração automática a partir do `localStorage`.
+## Novidades da versão 2.4
+- **Fixos do Ciclo (Lançamento em 1 Toque):** Lista colapsável de despesas fixas mensais (renda, energia, telecomunicações, ginásio) com deteção automática de pagamento no ciclo e lançamento instantâneo.
+- **Cartão de Crédito Opcional ("Sem Atrito"):** Mantém *Conta à Ordem* selecionada por defeito, mas permite marcar despesas a *Crédito* para acumular num indicador separado e liquidar tudo num toque após o dia de vencimento.
+- **Resumo do Ciclo Partilhável:** Botão na aba *Análise* para copiar ou partilhar o balanço fechado do ciclo pelo iOS Share Sheet.
+- **Gestão de Regras Memorizadas:** Consulta e limpeza das associações automáticas aprendidas durante as importações de PDF.
 
-## Estrutura do Projeto
-- `index.html` — Interface completa, lógica de ciclos orçamentais, importação PDF e armazenamento local (`IndexedDB`).
-- `manifest.json` — Configuração PWA para instalação no ecrã principal do iOS.
-- `sw.js` — *Service Worker* para cache offline (`unofin-v2.3.0`).
-- `icon.svg` — Ícone vetorial da aplicação.
+## Funcionalidades Base (v2.3)
+- Importação de extratos bancários em PDF com aprendizagem automática de categorias e deteção de duplicados (±3 dias).
+- Acerto rápido de saldo real (reconciliação com o banco).
+- Armazenamento robusto em `IndexedDB` com exportação/importação de backup `.json`.
 
 ## Como instalar no iPhone (via GitHub Pages)
-1. Cria um repositório no GitHub (ex.: `unofin`) e carrega todos os ficheiros desta pasta.
-2. Vai a **Settings > Pages**, seleciona a branch `main` e guarda.
-3. Abre o endereço gerado no **Safari** do iPhone.
-4. Toca no ícone de **Partilhar** (quadrado com seta para cima) e seleciona **"Adicionar ao ecrã principal"**.
+1. Carrega todos os ficheiros desta pasta para o teu repositório GitHub (`unofin`).
+2. Aguarda a publicação no GitHub Pages e abre a app no iPhone.
+3. Fecha completamente a app no seletor de tarefas do iOS e volta a abrir para ativar a versão `v2.4.0`.

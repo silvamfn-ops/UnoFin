@@ -34,6 +34,7 @@
       --warning: #f59e0b;
       --warning-soft: rgba(245, 158, 11, 0.14);
       --info: #3b82f6;
+      --info-soft: rgba(59, 130, 246, 0.12);
       --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
       --safe-top: env(safe-area-inset-top, 20px);
       --safe-bottom: env(safe-area-inset-bottom, 20px);
@@ -55,6 +56,7 @@
       --warning: #fbbf24;
       --warning-soft: rgba(251, 191, 36, 0.15);
       --info: #60a5fa;
+      --info-soft: rgba(96, 165, 250, 0.15);
       --shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
     }
 
@@ -221,9 +223,37 @@
       font-size: 32px;
       font-weight: 800;
       letter-spacing: -0.8px;
-      margin: 6px 0 16px;
+      margin: 6px 0 14px;
       cursor: pointer;
       display: inline-block;
+    }
+
+    .credit-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(251, 191, 36, 0.14);
+      border: 1px solid rgba(251, 191, 36, 0.32);
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 12px;
+      color: #fde68a;
+    }
+
+    .credit-banner.visible {
+      display: flex;
+    }
+
+    .credit-settle-btn {
+      background: #f59e0b;
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .balance-grid {
@@ -260,7 +290,7 @@
       font-weight: 700;
     }
 
-    /* Budget Progress */
+    /* Cards & Budget Progress */
     .card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
@@ -274,12 +304,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .card-title {
       font-size: 15px;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .progress-track {
@@ -303,6 +336,95 @@
       justify-content: space-between;
       font-size: 12px;
       color: var(--text-secondary);
+    }
+
+    /* Fixos do Ciclo (Despesas Recorrentes) */
+    .fixed-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mini-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .fixed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .fixed-list.collapsed {
+      display: none;
+    }
+
+    .fixed-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 13px;
+    }
+
+    .fixed-item.paid {
+      opacity: 0.62;
+    }
+
+    .fixed-item-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      overflow: hidden;
+    }
+
+    .fixed-check-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 1.5px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .fixed-item.paid .fixed-check-btn {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .fixed-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fixed-item.paid .fixed-name {
+      text-decoration: line-through;
+    }
+
+    .fixed-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     /* Chart Section */
@@ -450,6 +572,18 @@
       font-size: 12px;
       color: var(--text-muted);
       margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .credit-tag {
+      background: var(--warning-soft);
+      color: var(--warning);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 6px;
     }
 
     .tx-amount {
@@ -465,6 +599,10 @@
 
     .tx-amount.expense {
       color: var(--danger);
+    }
+
+    .tx-amount.credit {
+      color: var(--warning);
     }
 
     /* Bottom Navigation & FAB */
@@ -578,7 +716,7 @@
       background: var(--bg-tertiary);
       padding: 4px;
       border-radius: 13px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .type-btn {
@@ -600,6 +738,47 @@
     .type-btn.active.income {
       background: var(--accent);
       color: #fff;
+    }
+
+    /* Payment method optional chip */
+    .payment-chip-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+    }
+
+    .chip-switch {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pay-chip {
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pay-chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pay-chip.active.credit {
+      background: var(--warning-soft);
+      border-color: var(--warning);
+      color: var(--warning);
     }
 
     .form-group {
@@ -760,6 +939,47 @@
       border-radius: 9px;
       font-size: 12px;
     }
+
+    /* Regras & Listas de gestão */
+    .rule-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-tertiary);
+      padding: 10px 12px;
+      border-radius: 11px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .del-icon-btn {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: none;
+      border-radius: 8px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Impressão limpa de Relatório */
+    @media print {
+      header, .cycle-bar, .bottom-nav, .filters-row, #budgetCard, #fixedCard, .reconcile-pill, .credit-settle-btn, #exportReportBtn {
+        display: none !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0 !important;
+      }
+      .card, .balance-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -792,10 +1012,17 @@
     <section id="viewDashboard" class="view-section active">
       <div class="balance-card">
         <div class="balance-header-row">
-          <span class="balance-title">Saldo do Ciclo Atual</span>
+          <span class="balance-title">Saldo Disponível (Conta)</span>
           <button type="button" class="reconcile-pill" id="openReconcileBtn">⚖️ Acertar Saldo</button>
         </div>
         <div class="balance-amount" id="cycleBalance" title="Toca para acertar com o saldo real do banco">0,00 €</div>
+
+        <!-- Indicador Opcional de Cartão de Crédito -->
+        <div class="credit-banner" id="creditBanner">
+          <span>💳 Crédito pendente: <strong id="creditDebtAmount">0,00 €</strong></span>
+          <button type="button" class="credit-settle-btn" id="settleCreditBtn">Liquidar</button>
+        </div>
+
         <div class="balance-grid">
           <div class="stat-box">
             <span class="stat-label">▲ Receitas</span>
@@ -821,6 +1048,20 @@
           <span id="budgetSpentText">Gasto: 0,00 €</span>
           <span id="budgetLimitText">Limite: 1.500,00 €</span>
         </div>
+      </div>
+
+      <!-- Despesas Fixas / Recorrentes do Ciclo (1 Toque) -->
+      <div class="card" id="fixedCard">
+        <div class="card-header" style="margin-bottom: 4px;">
+          <span class="card-title" id="toggleFixedCollapse" style="cursor:pointer;">
+            📌 Fixos do Ciclo <span id="fixedSummaryBadge" style="font-size:12px; font-weight:600; color:var(--text-muted);"></span>
+          </span>
+          <div class="fixed-header-actions">
+            <button type="button" class="mini-btn" id="openManageFixedBtn">+ Gerir</button>
+            <button type="button" class="mini-btn" id="collapseFixedBtn">▾</button>
+          </div>
+        </div>
+        <div class="fixed-list" id="fixedListContainer"></div>
       </div>
 
       <!-- Filtros Rápidos -->
@@ -872,6 +1113,8 @@
           </div>
         </div>
       </div>
+
+      <button type="button" class="btn-secondary" id="exportReportBtn">📋 Copiar / Partilhar Resumo do Ciclo</button>
     </section>
   </main>
 
@@ -901,6 +1144,15 @@
         <button type="button" class="type-btn income" data-type="income">Receita</button>
       </div>
 
+      <!-- Meio de pagamento opcional (apenas visível nas despesas) -->
+      <div class="payment-chip-row" id="paymentMethodRow">
+        <span style="color:var(--text-secondary); font-weight:600;">Meio de pagamento</span>
+        <div class="chip-switch">
+          <button type="button" class="pay-chip active" data-pay="account">🏦 Conta</button>
+          <button type="button" class="pay-chip credit" data-pay="credit">💳 Crédito</button>
+        </div>
+      </div>
+
       <form id="txForm">
         <input type="hidden" id="txId" />
         <div class="form-group">
@@ -923,6 +1175,39 @@
         <button type="submit" class="btn-primary">Guardar Movimento</button>
         <button type="button" class="btn-danger" id="deleteTxBtn" style="display:none;">Eliminar Movimento</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal Gerir Despesas Fixas Recorrentes -->
+  <div class="modal-backdrop" id="fixedModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title">📌 Despesas Fixas Mensais</span>
+        <button class="icon-btn" id="closeFixedModalBtn">✕</button>
+      </div>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:14px;">
+        Define os encargos habituais de cada ciclo (ex.: Renda, Luz, Internet, Ginásio) para lançares com 1 toque.
+      </p>
+
+      <form id="addFixedForm" style="margin-bottom:16px;">
+        <div class="form-group">
+          <label for="fixedNameInput">Nome do Encargo</label>
+          <input type="text" id="fixedNameInput" class="form-control" placeholder="Ex: Prestação Casa, MEO, EDP" required />
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div class="form-group">
+            <label for="fixedAmountInput">Valor Habitual (€)</label>
+            <input type="number" step="0.01" min="0.01" id="fixedAmountInput" class="form-control" placeholder="0.00" required />
+          </div>
+          <div class="form-group">
+            <label for="fixedCatInput">Categoria</label>
+            <select id="fixedCatInput" class="form-control"></select>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Adicionar à Lista Fixa</button>
+      </form>
+
+      <div id="fixedTemplatesList"></div>
     </div>
   </div>
 
@@ -963,6 +1248,20 @@
     </div>
   </div>
 
+  <!-- Modal Gestão de Regras Aprendidas -->
+  <div class="modal-backdrop" id="rulesModal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title">🧠 Regras Memorizadas</span>
+        <button class="icon-btn" id="closeRulesModalBtn">✕</button>
+      </div>
+      <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
+        Estabelecimentos que o UnoFin aprendeu automaticamente com as tuas escolhas.
+      </p>
+      <div id="rulesListContainer" style="max-height:55vh; overflow-y:auto;"></div>
+    </div>
+  </div>
+
   <!-- Modal Definições & Backup Local -->
   <div class="modal-backdrop" id="settingsModal">
     <div class="modal-sheet">
@@ -982,6 +1281,13 @@
       </div>
 
       <button type="button" class="btn-primary" id="saveSettingsBtn" style="margin-bottom:18px;">Guardar Preferências</button>
+
+      <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-bottom: 14px;">
+        <label style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:10px;">
+          Automação Inteligente
+        </label>
+        <button type="button" class="btn-secondary" id="openRulesBtn">🧠 Gerir Regras Memorizadas (<span id="rulesCountLabel">0</span>)</button>
+      </div>
 
       <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
         <label style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:10px;">
@@ -1065,17 +1371,20 @@
       settings: {
         cycleStartDay: 21,
         monthlyBudget: 1500,
-        theme: 'dark'
+        theme: 'dark',
+        fixedCollapsed: false
       },
       transactions: [],
+      fixedExpenses: [], // { id, name, amount, category }
       learnedRules: {},
       cycleOffset: 0
     };
 
     let currentTxType = 'expense';
+    let currentPayMethod = 'account'; // 'account' | 'credit'
     let parsedPdfItems = [];
 
-    // --- Camada IndexedDB (com migração transparente do localStorage) ---
+    // --- Camada IndexedDB ---
     function openDB() {
       return new Promise((resolve, reject) => {
         const req = indexedDB.open(IDB_NAME, 1);
@@ -1123,6 +1432,7 @@
         if (saved) {
           state.settings = { ...state.settings, ...(saved.settings || {}) };
           state.transactions = Array.isArray(saved.transactions) ? saved.transactions : [];
+          state.fixedExpenses = Array.isArray(saved.fixedExpenses) ? saved.fixedExpenses : [];
           state.learnedRules = saved.learnedRules && typeof saved.learnedRules === 'object' ? saved.learnedRules : {};
         }
       } catch (e) {
@@ -1135,6 +1445,7 @@
       const payload = {
         settings: state.settings,
         transactions: state.transactions,
+        fixedExpenses: state.fixedExpenses,
         learnedRules: state.learnedRules
       };
       try {
@@ -1171,6 +1482,10 @@
       return { start, end };
     }
 
+    function getCycleKey(start) {
+      return `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
+    }
+
     function formatDateShort(date) {
       return date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' }).replace('.', '');
     }
@@ -1192,34 +1507,75 @@
       }).sort((a, b) => b.date.localeCompare(a.date));
 
       let income = 0;
-      let expense = 0;
+      let accountExpense = 0;
+      let totalExpense = 0;
+      let unsettledCredit = 0;
+
       cycleTxs.forEach(tx => {
-        if (tx.type === 'income') income += Number(tx.amount);
-        else expense += Number(tx.amount);
+        const amt = Number(tx.amount);
+        if (tx.type === 'income') {
+          income += amt;
+        } else {
+          totalExpense += amt;
+          if (tx.paymentMethod === 'credit') {
+            if (!tx.creditSettled) {
+              unsettledCredit += amt;
+            } else {
+              accountExpense += amt;
+            }
+          } else {
+            accountExpense += amt;
+          }
+        }
       });
 
-      return { start, end, cycleTxs, income, expense, balance: income - expense };
+      return {
+        start,
+        end,
+        cycleKey: getCycleKey(start),
+        cycleTxs,
+        income,
+        accountExpense,
+        totalExpense,
+        unsettledCredit,
+        balance: income - accountExpense
+      };
     }
 
-    // --- Renderização ---
+    // --- Renderização Principal ---
     function render() {
-      const { start, end, cycleTxs, income, expense, balance } = getCycleSummary(state.cycleOffset);
-      document.getElementById('cycleLabelText').textContent = `${formatDateShort(start)} — ${formatDateShort(end)}`;
+      const summary = getCycleSummary(state.cycleOffset);
+      const { start, end, cycleKey, cycleTxs, income, totalExpense, unsettledCredit, balance } = summary;
 
+      document.getElementById('cycleLabelText').textContent = `${formatDateShort(start)} — ${formatDateShort(end)}`;
       document.getElementById('cycleBalance').textContent = formatCurrency(balance);
       document.getElementById('cycleIncome').textContent = formatCurrency(income);
-      document.getElementById('cycleExpense').textContent = formatCurrency(expense);
+      document.getElementById('cycleExpense').textContent = formatCurrency(totalExpense);
 
+      // Banner opcional de Cartão de Crédito
+      const creditBanner = document.getElementById('creditBanner');
+      if (unsettledCredit > 0) {
+        document.getElementById('creditDebtAmount').textContent = formatCurrency(unsettledCredit);
+        creditBanner.classList.add('visible');
+      } else {
+        creditBanner.classList.remove('visible');
+      }
+
+      // Barra de Orçamento (inclui todo o consumo do ciclo: conta + crédito)
       const limit = Number(state.settings.monthlyBudget) || 0;
-      const pct = limit > 0 ? Math.min(100, Math.round((expense / limit) * 100)) : 0;
+      const pct = limit > 0 ? Math.min(100, Math.round((totalExpense / limit) * 100)) : 0;
       const bar = document.getElementById('budgetBar');
       bar.style.width = `${pct}%`;
       bar.style.backgroundColor = pct >= 90 ? 'var(--danger)' : (pct >= 75 ? 'var(--warning)' : 'var(--accent)');
       document.getElementById('budgetPercent').textContent = `${pct}%`;
       document.getElementById('budgetPercent').style.color = pct >= 90 ? 'var(--danger)' : 'var(--accent)';
-      document.getElementById('budgetSpentText').textContent = `Gasto: ${formatCurrency(expense)}`;
+      document.getElementById('budgetSpentText').textContent = `Gasto: ${formatCurrency(totalExpense)}`;
       document.getElementById('budgetLimitText').textContent = `Limite: ${formatCurrency(limit)}`;
 
+      // Renderizar Fixos do Ciclo
+      renderFixedCard(cycleKey, cycleTxs);
+
+      // Filtros
       const search = document.getElementById('searchInput').value.trim().toLowerCase();
       const catFilter = document.getElementById('categoryFilter').value;
 
@@ -1238,6 +1594,8 @@
         filteredTxs.forEach(tx => {
           const cat = getCategoryObj(tx.type, tx.category);
           const dateFmt = new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' });
+          const isUnsettledCredit = tx.type === 'expense' && tx.paymentMethod === 'credit' && !tx.creditSettled;
+
           const div = document.createElement('div');
           div.className = 'tx-item';
           div.innerHTML = `
@@ -1245,10 +1603,13 @@
               <div class="tx-icon">${cat.icon}</div>
               <div class="tx-details">
                 <div class="tx-desc">${escapeHtml(tx.description)}</div>
-                <div class="tx-meta">${dateFmt} • ${cat.name}</div>
+                <div class="tx-meta">
+                  <span>${dateFmt} • ${cat.name}</span>
+                  ${tx.paymentMethod === 'credit' ? `<span class="credit-tag">${tx.creditSettled ? '💳 Pago' : '💳 Crédito'}</span>` : ''}
+                </div>
               </div>
             </div>
-            <div class="tx-amount ${tx.type}">
+            <div class="tx-amount ${isUnsettledCredit ? 'credit' : tx.type}">
               ${tx.type === 'income' ? '+' : '-'}${formatCurrency(Number(tx.amount))}
             </div>
           `;
@@ -1257,9 +1618,131 @@
         });
       }
 
-      renderAnalytics(cycleTxs, income, expense, start, end);
+      renderAnalytics(cycleTxs, income, totalExpense, start, end);
     }
 
+    // --- Despesas Fixas do Ciclo (1 Toque) ---
+    function isFixedPaidInCycle(fixedItem, cycleKey, cycleTxs) {
+      const normFixed = fixedItem.name.toLowerCase().trim();
+      return cycleTxs.some(tx =>
+        tx.type === 'expense' &&
+        (tx.fixedId === fixedItem.id ||
+          (tx.description.toLowerCase().includes(normFixed) && Math.abs(Number(tx.amount) - Number(fixedItem.amount)) < 0.05))
+      );
+    }
+
+    function renderFixedCard(cycleKey, cycleTxs) {
+      const listEl = document.getElementById('fixedListContainer');
+      const badgeEl = document.getElementById('fixedSummaryBadge');
+      const collapseBtn = document.getElementById('collapseFixedBtn');
+
+      listEl.classList.toggle('collapsed', !!state.settings.fixedCollapsed);
+      collapseBtn.textContent = state.settings.fixedCollapsed ? '▸' : '▾';
+
+      if (state.fixedExpenses.length === 0) {
+        badgeEl.textContent = '';
+        listEl.innerHTML = `<div style="font-size:12px; color:var(--text-muted); padding:4px 0;">Nenhum encargo fixo configurado. Toca em <strong>+ Gerir</strong> para adicionar.</div>`;
+        return;
+      }
+
+      let paidCount = 0;
+      let pendingTotal = 0;
+      listEl.innerHTML = '';
+
+      state.fixedExpenses.forEach(item => {
+        const paid = isFixedPaidInCycle(item, cycleKey, cycleTxs);
+        if (paid) paidCount++;
+        else pendingTotal += Number(item.amount);
+
+        const cat = getCategoryObj('expense', item.category);
+        const row = document.createElement('div');
+        row.className = 'fixed-item' + (paid ? ' paid' : '');
+        row.innerHTML = `
+          <div class="fixed-item-left">
+            <button type="button" class="fixed-check-btn" title="${paid ? 'Já lançado neste ciclo' : 'Lançar agora com 1 toque'}">${paid ? '✓' : ''}</button>
+            <span class="fixed-name">${cat.icon} ${escapeHtml(item.name)}</span>
+          </div>
+          <div class="fixed-right">
+            <strong>${formatCurrency(Number(item.amount))}</strong>
+          </div>
+        `;
+
+        row.querySelector('.fixed-check-btn').addEventListener('click', async () => {
+          if (paid) return;
+          const { start, end } = getCycleRange(state.cycleOffset);
+          const today = new Date();
+          let txDate = today.toISOString().slice(0, 10);
+          if (today < start || today > end) {
+            txDate = start.toISOString().slice(0, 10);
+          }
+
+          state.transactions.push({
+            id: 'tx_fix_' + Date.now(),
+            fixedId: item.id,
+            type: 'expense',
+            paymentMethod: 'account',
+            amount: Number(item.amount),
+            description: item.name,
+            category: item.category,
+            date: txDate
+          });
+          await saveState();
+          render();
+        });
+
+        listEl.appendChild(row);
+      });
+
+      badgeEl.textContent = `(${paidCount}/${state.fixedExpenses.length}${pendingTotal > 0 ? ' • Falta ' + formatCurrency(pendingTotal) : ' • Tudo pago'})`;
+    }
+
+    function renderFixedTemplatesModal() {
+      const container = document.getElementById('fixedTemplatesList');
+      container.innerHTML = '';
+      if (state.fixedExpenses.length === 0) {
+        container.innerHTML = '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:10px;">Sem encargos fixos guardados.</div>';
+        return;
+      }
+
+      state.fixedExpenses.forEach(item => {
+        const cat = getCategoryObj('expense', item.category);
+        const div = document.createElement('div');
+        div.className = 'rule-row';
+        div.innerHTML = `
+          <div>
+            <strong>${cat.icon} ${escapeHtml(item.name)}</strong>
+            <div style="font-size:11px; color:var(--text-muted);">${cat.name} • ${formatCurrency(Number(item.amount))}</div>
+          </div>
+          <button type="button" class="del-icon-btn">Remover</button>
+        `;
+        div.querySelector('button').addEventListener('click', async () => {
+          state.fixedExpenses = state.fixedExpenses.filter(f => f.id !== item.id);
+          await saveState();
+          renderFixedTemplatesModal();
+          render();
+        });
+        container.appendChild(div);
+      });
+    }
+
+    // --- Liquidar Cartão de Crédito do Ciclo ---
+    document.getElementById('settleCreditBtn').addEventListener('click', async () => {
+      const { start, end, unsettledCredit } = getCycleSummary(state.cycleOffset);
+      if (unsettledCredit <= 0) return;
+      if (!confirm(`Confirmas a liquidação de ${formatCurrency(unsettledCredit)} do cartão de crédito para abater no saldo da conta?`)) return;
+
+      state.transactions.forEach(tx => {
+        const d = new Date(tx.date + 'T12:00:00');
+        if (d >= start && d <= end && tx.type === 'expense' && tx.paymentMethod === 'credit' && !tx.creditSettled) {
+          tx.creditSettled = true;
+        }
+      });
+
+      await saveState();
+      render();
+    });
+
+    // --- Gráficos & Relatório ---
     function renderAnalytics(cycleTxs, income, expense, start, end) {
       const expenseTxs = cycleTxs.filter(t => t.type === 'expense');
       const byCat = {};
@@ -1332,6 +1815,46 @@
       document.getElementById('txCount').textContent = cycleTxs.length;
     }
 
+    // Exportar / Partilhar Resumo do Ciclo
+    document.getElementById('exportReportBtn').addEventListener('click', async () => {
+      const { start, end, cycleTxs, income, totalExpense, balance } = getCycleSummary(state.cycleOffset);
+      const byCat = {};
+      cycleTxs.filter(t => t.type === 'expense').forEach(t => {
+        byCat[t.category] = (byCat[t.category] || 0) + Number(t.amount);
+      });
+
+      let lines = [
+        `📊 RESUMO UNOFIN (${formatDateShort(start)} a ${formatDateShort(end)})`,
+        `• Receitas: ${formatCurrency(income)}`,
+        `• Despesas: ${formatCurrency(totalExpense)}`,
+        `• Saldo: ${formatCurrency(balance)}`,
+        ``,
+        `Despesas por Categoria:`
+      ];
+
+      Object.entries(byCat).sort((a, b) => b[1] - a[1]).forEach(([catId, val]) => {
+        const cat = getCategoryObj('expense', catId);
+        lines.push(`- ${cat.name}: ${formatCurrency(val)}`);
+      });
+
+      const reportText = lines.join('
+');
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'Resumo UnoFin', text: reportText });
+          return;
+        } catch (_) {}
+      }
+
+      try {
+        await navigator.clipboard.writeText(reportText);
+        alert('Resumo do ciclo copiado para a área de transferência!');
+      } catch (_) {
+        alert(reportText);
+      }
+    });
+
     function populateCategorySelects() {
       const filterSel = document.getElementById('categoryFilter');
       filterSel.innerHTML = '<option value="ALL">Todas as categorias</option>';
@@ -1340,6 +1863,15 @@
         opt.value = c.id;
         opt.textContent = `${c.icon} ${c.name}`;
         filterSel.appendChild(opt);
+      });
+
+      const fixedCatSel = document.getElementById('fixedCatInput');
+      fixedCatSel.innerHTML = '';
+      CATEGORIES.expense.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.icon} ${c.name}`;
+        fixedCatSel.appendChild(opt);
       });
     }
 
@@ -1355,11 +1887,19 @@
       });
     }
 
+    function setPayMethod(method) {
+      currentPayMethod = method;
+      document.querySelectorAll('.pay-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pay === method);
+      });
+    }
+
     function setModalType(type) {
       currentTxType = type;
       document.querySelectorAll('.type-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.type === type);
       });
+      document.getElementById('paymentMethodRow').style.display = type === 'expense' ? 'flex' : 'none';
       updateModalCategories(type);
     }
 
@@ -1371,6 +1911,7 @@
       document.getElementById('txDate').value = new Date().toISOString().slice(0, 10);
       document.getElementById('deleteTxBtn').style.display = 'none';
       setModalType('expense');
+      setPayMethod('account');
       document.getElementById('txModal').classList.add('open');
     }
 
@@ -1381,6 +1922,7 @@
       document.getElementById('txDesc').value = tx.description;
       document.getElementById('txDate').value = tx.date;
       setModalType(tx.type);
+      setPayMethod(tx.paymentMethod || 'account');
       updateModalCategories(tx.type, tx.category);
       document.getElementById('deleteTxBtn').style.display = 'block';
       document.getElementById('txModal').classList.add('open');
@@ -1428,6 +1970,7 @@
       state.transactions.push({
         id: 'tx_rec_' + Date.now(),
         type: diff > 0 ? 'income' : 'expense',
+        paymentMethod: 'account',
         amount: Math.abs(diff),
         description: 'Acerto de Saldo (Reconciliação)',
         category: diff > 0 ? 'reembolso' : 'outros_desp',
@@ -1654,6 +2197,7 @@
         state.transactions.push({
           id: 'tx_pdf_' + Date.now() + '_' + idx,
           type: item.type,
+          paymentMethod: 'account',
           amount: item.amount,
           description: item.description,
           category: item.category,
@@ -1667,6 +2211,50 @@
       if (toImport.length > 0) {
         alert(`${toImport.length} movimento(s) importado(s) com sucesso!`);
       }
+    });
+
+    // --- Gestão de Regras Aprendidas ---
+    function renderRulesModal() {
+      const container = document.getElementById('rulesListContainer');
+      const entries = Object.entries(state.learnedRules);
+      container.innerHTML = '';
+
+      if (entries.length === 0) {
+        container.innerHTML = '<div style="font-size:13px; color:var(--text-muted); text-align:center; padding:16px;">Ainda não existem regras memorizadas.</div>';
+        return;
+      }
+
+      entries.forEach(([key, catId]) => {
+        const cat = getCategoryObj('expense', catId).id === catId && getCategoryObj('expense', catId).name !== 'Geral'
+          ? getCategoryObj('expense', catId)
+          : getCategoryObj('income', catId);
+
+        const row = document.createElement('div');
+        row.className = 'rule-row';
+        row.innerHTML = `
+          <div>
+            <strong>${escapeHtml(key)}</strong>
+            <div style="font-size:11px; color:var(--text-muted);">${cat.icon} ${cat.name}</div>
+          </div>
+          <button type="button" class="del-icon-btn">Apagar</button>
+        `;
+        row.querySelector('button').addEventListener('click', async () => {
+          delete state.learnedRules[key];
+          await saveState();
+          document.getElementById('rulesCountLabel').textContent = Object.keys(state.learnedRules).length;
+          renderRulesModal();
+        });
+        container.appendChild(row);
+      });
+    }
+
+    document.getElementById('openRulesBtn').addEventListener('click', () => {
+      renderRulesModal();
+      document.getElementById('rulesModal').classList.add('open');
+    });
+
+    document.getElementById('closeRulesModalBtn').addEventListener('click', () => {
+      document.getElementById('rulesModal').classList.remove('open');
     });
 
     // --- Event Listeners Gerais ---
@@ -1700,6 +2288,46 @@
       });
     });
 
+    // Fixos do Ciclo listeners
+    async function toggleFixedSection() {
+      state.settings.fixedCollapsed = !state.settings.fixedCollapsed;
+      await saveState();
+      render();
+    }
+    document.getElementById('collapseFixedBtn').addEventListener('click', toggleFixedSection);
+    document.getElementById('toggleFixedCollapse').addEventListener('click', toggleFixedSection);
+
+    document.getElementById('openManageFixedBtn').addEventListener('click', () => {
+      renderFixedTemplatesModal();
+      document.getElementById('fixedModal').classList.add('open');
+    });
+
+    document.getElementById('closeFixedModalBtn').addEventListener('click', () => {
+      document.getElementById('fixedModal').classList.remove('open');
+    });
+
+    document.getElementById('addFixedForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('fixedNameInput').value.trim();
+      const amount = parseFloat(document.getElementById('fixedAmountInput').value);
+      const category = document.getElementById('fixedCatInput').value;
+      if (!name || !amount || amount <= 0) return;
+
+      state.fixedExpenses.push({
+        id: 'fix_' + Date.now(),
+        name,
+        amount,
+        category
+      });
+
+      document.getElementById('fixedNameInput').value = '';
+      document.getElementById('fixedAmountInput').value = '';
+      await saveState();
+      renderFixedTemplatesModal();
+      render();
+    });
+
+    // Modal Novo / Editar Movimento
     document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
     document.getElementById('closeTxModalBtn').addEventListener('click', () => {
       document.getElementById('txModal').classList.remove('open');
@@ -1707,6 +2335,10 @@
 
     document.querySelectorAll('.type-btn').forEach(btn => {
       btn.addEventListener('click', () => setModalType(btn.dataset.type));
+    });
+
+    document.querySelectorAll('.pay-chip').forEach(btn => {
+      btn.addEventListener('click', () => setPayMethod(btn.dataset.pay));
     });
 
     document.getElementById('txForm').addEventListener('submit', async (e) => {
@@ -1724,15 +2356,29 @@
         state.learnedRules[normKey] = category;
       }
 
+      const paymentMethod = currentTxType === 'expense' ? currentPayMethod : 'account';
+
       if (id) {
         const idx = state.transactions.findIndex(t => t.id === id);
         if (idx !== -1) {
-          state.transactions[idx] = { id, type: currentTxType, amount, description, category, date };
+          const prev = state.transactions[idx];
+          state.transactions[idx] = {
+            ...prev,
+            type: currentTxType,
+            paymentMethod,
+            creditSettled: paymentMethod === 'credit' ? (prev.creditSettled || false) : false,
+            amount,
+            description,
+            category,
+            date
+          };
         }
       } else {
         state.transactions.push({
           id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
           type: currentTxType,
+          paymentMethod,
+          creditSettled: false,
           amount,
           description,
           category,
@@ -1759,6 +2405,7 @@
     document.getElementById('openSettingsBtn').addEventListener('click', () => {
       document.getElementById('cycleStartDayInput').value = state.settings.cycleStartDay;
       document.getElementById('monthlyBudgetInput').value = state.settings.monthlyBudget;
+      document.getElementById('rulesCountLabel').textContent = Object.keys(state.learnedRules).length;
       document.getElementById('settingsModal').classList.add('open');
     });
 
@@ -1780,10 +2427,11 @@
     document.getElementById('exportJsonBtn').addEventListener('click', () => {
       const dataStr = JSON.stringify({
         app: 'UnoFin',
-        version: '2.3',
+        version: '2.4',
         exportedAt: new Date().toISOString(),
         settings: state.settings,
         transactions: state.transactions,
+        fixedExpenses: state.fixedExpenses,
         learnedRules: state.learnedRules
       }, null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
@@ -1812,6 +2460,9 @@
             state.transactions = imported.transactions;
             if (imported.settings) {
               state.settings = { ...state.settings, ...imported.settings };
+            }
+            if (Array.isArray(imported.fixedExpenses)) {
+              state.fixedExpenses = imported.fixedExpenses;
             }
             if (imported.learnedRules) {
               state.learnedRules = { ...state.learnedRules, ...imported.learnedRules };
