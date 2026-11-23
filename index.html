@@ -14,9 +14,6 @@
   <link rel="apple-touch-icon" href="icon.svg" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
 
-  <!-- PDF.js para leitura local de extratos bancários -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
   <style>
     :root {
       --bg-primary: #f8fafc;
@@ -990,22 +987,22 @@
       <h1>UnoFin</h1>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" id="importPdfBtn" title="Importar Extrato PDF">📄</button>
+      <button type="button" class="icon-btn" id="importPdfBtn" title="Importar Extrato PDF">📄</button>
       <input type="file" id="pdfFileInput" accept="application/pdf,.pdf" style="display:none;" />
-      <button class="icon-btn" id="themeToggle" title="Alternar Tema">☀️</button>
-      <button class="icon-btn" id="openSettingsBtn" title="Definições e Backup">⚙️</button>
+      <button type="button" class="icon-btn" id="themeToggle" title="Alternar Tema">☀️</button>
+      <button type="button" class="icon-btn" id="openSettingsBtn" title="Definições e Backup">⚙️</button>
     </div>
   </header>
 
   <main>
     <!-- Navegador de Ciclo Mensal -->
     <div class="cycle-bar">
-      <button class="icon-btn" id="prevCycleBtn">◀</button>
+      <button type="button" class="icon-btn" id="prevCycleBtn">◀</button>
       <div class="cycle-info">
         <div class="cycle-label">Ciclo Orçamental</div>
         <div class="cycle-dates" id="cycleLabelText">21 Out — 20 Nov</div>
       </div>
-      <button class="icon-btn" id="nextCycleBtn">▶</button>
+      <button type="button" class="icon-btn" id="nextCycleBtn">▶</button>
     </div>
 
     <!-- Vista Principal: Resumo e Movimentos -->
@@ -1120,12 +1117,12 @@
 
   <!-- Navegação Inferior -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" data-target="viewDashboard">
+    <button type="button" class="nav-btn active" data-target="viewDashboard">
       <span class="ico">💳</span>
       <span>Movimentos</span>
     </button>
-    <button class="fab-btn" id="openAddModalBtn" title="Novo Movimento">+</button>
-    <button class="nav-btn" data-target="viewAnalytics">
+    <button type="button" class="fab-btn" id="openAddModalBtn" title="Novo Movimento">+</button>
+    <button type="button" class="nav-btn" data-target="viewAnalytics">
       <span class="ico">📊</span>
       <span>Análise</span>
     </button>
@@ -1136,7 +1133,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title" id="txModalTitle">Novo Movimento</span>
-        <button class="icon-btn" id="closeTxModalBtn">✕</button>
+        <button type="button" class="icon-btn" id="closeTxModalBtn">✕</button>
       </div>
 
       <div class="type-toggle">
@@ -1183,7 +1180,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title">📌 Despesas Fixas Mensais</span>
-        <button class="icon-btn" id="closeFixedModalBtn">✕</button>
+        <button type="button" class="icon-btn" id="closeFixedModalBtn">✕</button>
       </div>
       <p style="font-size:12px; color:var(--text-secondary); margin-bottom:14px;">
         Define os encargos habituais de cada ciclo (ex.: Renda, Luz, Internet, Ginásio) para lançares com 1 toque.
@@ -1216,7 +1213,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title">⚖️ Acerto de Saldo Real</span>
-        <button class="icon-btn" id="closeReconcileBtn">✕</button>
+        <button type="button" class="icon-btn" id="closeReconcileBtn">✕</button>
       </div>
       <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">
         Introduz o saldo atual visível na app do teu banco. Se existir diferença, o UnoFin cria automaticamente um movimento de ajuste neste ciclo.
@@ -1238,7 +1235,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title" id="pdfModalTitle">Importar Extrato PDF</span>
-        <button class="icon-btn" id="closePdfModalBtn">✕</button>
+        <button type="button" class="icon-btn" id="closePdfModalBtn">✕</button>
       </div>
       <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
         Altera qualquer categoria abaixo para a app memorizar automaticamente nas próximas importações.
@@ -1253,7 +1250,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title">🧠 Regras Memorizadas</span>
-        <button class="icon-btn" id="closeRulesModalBtn">✕</button>
+        <button type="button" class="icon-btn" id="closeRulesModalBtn">✕</button>
       </div>
       <p style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
         Estabelecimentos que o UnoFin aprendeu automaticamente com as tuas escolhas.
@@ -1267,7 +1264,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <span class="modal-title">Definições & Backup</span>
-        <button class="icon-btn" id="closeSettingsBtn">✕</button>
+        <button type="button" class="icon-btn" id="closeSettingsBtn">✕</button>
       </div>
 
       <div class="form-group">
@@ -1291,7 +1288,7 @@
 
       <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
         <label style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:10px;">
-          Segurança de Dados (IndexedDB Local no iPhone)
+          Segurança de Dados (Armazenamento Local no iPhone)
         </label>
         <button type="button" class="btn-secondary" id="exportJsonBtn">📤 Exportar Backup (.json)</button>
         <button type="button" class="btn-secondary" id="importJsonBtn">📥 Restaurar Backup (.json)</button>
@@ -1301,11 +1298,6 @@
   </div>
 
   <script>
-    // --- Configuração PDF.js ---
-    if (window.pdfjsLib) {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-
     // --- Categorias ---
     const CATEGORIES = {
       expense: [
@@ -1375,27 +1367,95 @@
         fixedCollapsed: false
       },
       transactions: [],
-      fixedExpenses: [], // { id, name, amount, category }
+      fixedExpenses: [],
       learnedRules: {},
       cycleOffset: 0
     };
 
     let currentTxType = 'expense';
-    let currentPayMethod = 'account'; // 'account' | 'credit'
+    let currentPayMethod = 'account';
     let parsedPdfItems = [];
 
-    // --- Camada IndexedDB ---
-    function openDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open(IDB_NAME, 1);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains(IDB_STORE)) {
-            db.createObjectStore(IDB_STORE);
+    // --- Carregamento Lazy do PDF.js (não bloqueia o arranque offline/iOS) ---
+    let pdfJsLoadingPromise = null;
+    function ensurePdfJsLoaded() {
+      if (window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        return Promise.resolve(window.pdfjsLib);
+      }
+      if (pdfJsLoadingPromise) return pdfJsLoadingPromise;
+
+      pdfJsLoadingPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.onload = () => {
+          if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            resolve(window.pdfjsLib);
+          } else {
+            reject(new Error('Biblioteca PDF indisponível'));
           }
         };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
+        script.onerror = () => {
+          pdfJsLoadingPromise = null;
+          reject(new Error('Falha ao transferir biblioteca PDF (verifica a ligação à internet)'));
+        };
+        document.head.appendChild(script);
+      });
+
+      return pdfJsLoadingPromise;
+    }
+
+    // --- Camada IndexedDB Blindada com Timeout e Fallback para localStorage ---
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          return reject(new Error('IndexedDB não suportado'));
+        }
+        let settled = false;
+        const timer = setTimeout(() => {
+          if (!settled) {
+            settled = true;
+            reject(new Error('Timeout ao abrir IndexedDB'));
+          }
+        }, 1200);
+
+        try {
+          const req = indexedDB.open(IDB_NAME, 1);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(IDB_STORE)) {
+              db.createObjectStore(IDB_STORE);
+            }
+          };
+          req.onsuccess = () => {
+            if (!settled) {
+              settled = true;
+              clearTimeout(timer);
+              resolve(req.result);
+            }
+          };
+          req.onerror = () => {
+            if (!settled) {
+              settled = true;
+              clearTimeout(timer);
+              reject(req.error);
+            }
+          };
+          req.onblocked = () => {
+            if (!settled) {
+              settled = true;
+              clearTimeout(timer);
+              reject(new Error('IndexedDB bloqueado'));
+            }
+          };
+        } catch (err) {
+          if (!settled) {
+            settled = true;
+            clearTimeout(timer);
+            reject(err);
+          }
+        }
       });
     }
 
@@ -1419,25 +1479,42 @@
       });
     }
 
+    function applySavedData(saved) {
+      if (!saved || typeof saved !== 'object') return;
+      state.settings = { ...state.settings, ...(saved.settings || {}) };
+      state.transactions = Array.isArray(saved.transactions) ? saved.transactions : [];
+      state.fixedExpenses = Array.isArray(saved.fixedExpenses) ? saved.fixedExpenses : [];
+      state.learnedRules = saved.learnedRules && typeof saved.learnedRules === 'object' ? saved.learnedRules : {};
+    }
+
     async function loadState() {
+      // 1. Ler imediatamente do localStorage para arranque instantâneo sem bloqueio
       try {
-        let saved = await idbGet('main');
-        if (!saved) {
-          const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
-          if (legacy) {
-            saved = JSON.parse(legacy);
-            await idbSet('main', saved);
-          }
-        }
-        if (saved) {
-          state.settings = { ...state.settings, ...(saved.settings || {}) };
-          state.transactions = Array.isArray(saved.transactions) ? saved.transactions : [];
-          state.fixedExpenses = Array.isArray(saved.fixedExpenses) ? saved.fixedExpenses : [];
-          state.learnedRules = saved.learnedRules && typeof saved.learnedRules === 'object' ? saved.learnedRules : {};
+        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacy) {
+          applySavedData(JSON.parse(legacy));
         }
       } catch (e) {
-        console.error('Erro ao carregar base de dados local:', e);
+        console.warn('Aviso localStorage:', e);
       }
+
+      // 2. Tentar sincronizar com IndexedDB em segurança
+      try {
+        const savedIdb = await idbGet('main');
+        if (savedIdb) {
+          applySavedData(savedIdb);
+        } else if (state.transactions.length > 0 || state.fixedExpenses.length > 0) {
+          await idbSet('main', {
+            settings: state.settings,
+            transactions: state.transactions,
+            fixedExpenses: state.fixedExpenses,
+            learnedRules: state.learnedRules
+          });
+        }
+      } catch (e) {
+        console.warn('IndexedDB indisponível, a usar armazenamento rápido:', e);
+      }
+
       applyTheme(state.settings.theme);
     }
 
@@ -1449,12 +1526,10 @@
         learnedRules: state.learnedRules
       };
       try {
-        await idbSet('main', payload);
-      } catch (e) {
-        console.error('Erro ao gravar no IndexedDB:', e);
-      }
-      try {
         localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(payload));
+      } catch (_) {}
+      try {
+        await idbSet('main', payload);
       } catch (_) {}
     }
 
@@ -1491,7 +1566,7 @@
     }
 
     function formatCurrency(val) {
-      return val.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+      return Number(val || 0).toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
     }
 
     function getCategoryObj(type, id) {
@@ -1502,9 +1577,10 @@
     function getCycleSummary(offset = state.cycleOffset) {
       const { start, end } = getCycleRange(offset);
       const cycleTxs = state.transactions.filter(tx => {
+        if (!tx || !tx.date) return false;
         const d = new Date(tx.date + 'T12:00:00');
         return d >= start && d <= end;
-      }).sort((a, b) => b.date.localeCompare(a.date));
+      }).sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
       let income = 0;
       let accountExpense = 0;
@@ -1512,7 +1588,7 @@
       let unsettledCredit = 0;
 
       cycleTxs.forEach(tx => {
-        const amt = Number(tx.amount);
+        const amt = Number(tx.amount) || 0;
         if (tx.type === 'income') {
           income += amt;
         } else {
@@ -1561,7 +1637,7 @@
         creditBanner.classList.remove('visible');
       }
 
-      // Barra de Orçamento (inclui todo o consumo do ciclo: conta + crédito)
+      // Barra de Orçamento
       const limit = Number(state.settings.monthlyBudget) || 0;
       const pct = limit > 0 ? Math.min(100, Math.round((totalExpense / limit) * 100)) : 0;
       const bar = document.getElementById('budgetBar');
@@ -1580,7 +1656,8 @@
       const catFilter = document.getElementById('categoryFilter').value;
 
       const filteredTxs = cycleTxs.filter(tx => {
-        const matchSearch = !search || tx.description.toLowerCase().includes(search);
+        const desc = String(tx.description || '');
+        const matchSearch = !search || desc.toLowerCase().includes(search);
         const matchCat = catFilter === 'ALL' || tx.category === catFilter;
         return matchSearch && matchCat;
       });
@@ -1602,7 +1679,7 @@
             <div class="tx-left">
               <div class="tx-icon">${cat.icon}</div>
               <div class="tx-details">
-                <div class="tx-desc">${escapeHtml(tx.description)}</div>
+                <div class="tx-desc">${escapeHtml(String(tx.description || ''))}</div>
                 <div class="tx-meta">
                   <span>${dateFmt} • ${cat.name}</span>
                   ${tx.paymentMethod === 'credit' ? `<span class="credit-tag">${tx.creditSettled ? '💳 Pago' : '💳 Crédito'}</span>` : ''}
@@ -1623,11 +1700,11 @@
 
     // --- Despesas Fixas do Ciclo (1 Toque) ---
     function isFixedPaidInCycle(fixedItem, cycleKey, cycleTxs) {
-      const normFixed = fixedItem.name.toLowerCase().trim();
+      const normFixed = String(fixedItem.name || '').toLowerCase().trim();
       return cycleTxs.some(tx =>
         tx.type === 'expense' &&
         (tx.fixedId === fixedItem.id ||
-          (tx.description.toLowerCase().includes(normFixed) && Math.abs(Number(tx.amount) - Number(fixedItem.amount)) < 0.05))
+          (String(tx.description || '').toLowerCase().includes(normFixed) && Math.abs(Number(tx.amount) - Number(fixedItem.amount)) < 0.05))
       );
     }
 
@@ -1652,7 +1729,7 @@
       state.fixedExpenses.forEach(item => {
         const paid = isFixedPaidInCycle(item, cycleKey, cycleTxs);
         if (paid) paidCount++;
-        else pendingTotal += Number(item.amount);
+        else pendingTotal += Number(item.amount) || 0;
 
         const cat = getCategoryObj('expense', item.category);
         const row = document.createElement('div');
@@ -1660,7 +1737,7 @@
         row.innerHTML = `
           <div class="fixed-item-left">
             <button type="button" class="fixed-check-btn" title="${paid ? 'Já lançado neste ciclo' : 'Lançar agora com 1 toque'}">${paid ? '✓' : ''}</button>
-            <span class="fixed-name">${cat.icon} ${escapeHtml(item.name)}</span>
+            <span class="fixed-name">${cat.icon} ${escapeHtml(String(item.name || ''))}</span>
           </div>
           <div class="fixed-right">
             <strong>${formatCurrency(Number(item.amount))}</strong>
@@ -1710,7 +1787,7 @@
         div.className = 'rule-row';
         div.innerHTML = `
           <div>
-            <strong>${cat.icon} ${escapeHtml(item.name)}</strong>
+            <strong>${cat.icon} ${escapeHtml(String(item.name || ''))}</strong>
             <div style="font-size:11px; color:var(--text-muted);">${cat.name} • ${formatCurrency(Number(item.amount))}</div>
           </div>
           <button type="button" class="del-icon-btn">Remover</button>
@@ -1725,29 +1802,12 @@
       });
     }
 
-    // --- Liquidar Cartão de Crédito do Ciclo ---
-    document.getElementById('settleCreditBtn').addEventListener('click', async () => {
-      const { start, end, unsettledCredit } = getCycleSummary(state.cycleOffset);
-      if (unsettledCredit <= 0) return;
-      if (!confirm(`Confirmas a liquidação de ${formatCurrency(unsettledCredit)} do cartão de crédito para abater no saldo da conta?`)) return;
-
-      state.transactions.forEach(tx => {
-        const d = new Date(tx.date + 'T12:00:00');
-        if (d >= start && d <= end && tx.type === 'expense' && tx.paymentMethod === 'credit' && !tx.creditSettled) {
-          tx.creditSettled = true;
-        }
-      });
-
-      await saveState();
-      render();
-    });
-
     // --- Gráficos & Relatório ---
     function renderAnalytics(cycleTxs, income, expense, start, end) {
       const expenseTxs = cycleTxs.filter(t => t.type === 'expense');
       const byCat = {};
       expenseTxs.forEach(t => {
-        byCat[t.category] = (byCat[t.category] || 0) + Number(t.amount);
+        byCat[t.category] = (byCat[t.category] || 0) + (Number(t.amount) || 0);
       });
 
       const entries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
@@ -1814,46 +1874,6 @@
       document.getElementById('dailyAvg').textContent = formatCurrency(dailyAvg);
       document.getElementById('txCount').textContent = cycleTxs.length;
     }
-
-    // Exportar / Partilhar Resumo do Ciclo
-    document.getElementById('exportReportBtn').addEventListener('click', async () => {
-      const { start, end, cycleTxs, income, totalExpense, balance } = getCycleSummary(state.cycleOffset);
-      const byCat = {};
-      cycleTxs.filter(t => t.type === 'expense').forEach(t => {
-        byCat[t.category] = (byCat[t.category] || 0) + Number(t.amount);
-      });
-
-      let lines = [
-        `📊 RESUMO UNOFIN (${formatDateShort(start)} a ${formatDateShort(end)})`,
-        `• Receitas: ${formatCurrency(income)}`,
-        `• Despesas: ${formatCurrency(totalExpense)}`,
-        `• Saldo: ${formatCurrency(balance)}`,
-        ``,
-        `Despesas por Categoria:`
-      ];
-
-      Object.entries(byCat).sort((a, b) => b[1] - a[1]).forEach(([catId, val]) => {
-        const cat = getCategoryObj('expense', catId);
-        lines.push(`- ${cat.name}: ${formatCurrency(val)}`);
-      });
-
-      const reportText = lines.join('
-');
-
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: 'Resumo UnoFin', text: reportText });
-          return;
-        } catch (_) {}
-      }
-
-      try {
-        await navigator.clipboard.writeText(reportText);
-        alert('Resumo do ciclo copiado para a área de transferência!');
-      } catch (_) {
-        alert(reportText);
-      }
-    });
 
     function populateCategorySelects() {
       const filterSel = document.getElementById('categoryFilter');
@@ -1929,62 +1949,14 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({
+      return String(str).replace(/[&<>"']/g, m => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
       }[m]));
     }
 
-    // --- Acerto Rápido de Saldo (Reconciliação) ---
-    function openReconcileModal() {
-      const { balance } = getCycleSummary(state.cycleOffset);
-      document.getElementById('reconcileCurrentDisplay').value = formatCurrency(balance);
-      document.getElementById('reconcileRealInput').value = balance.toFixed(2);
-      document.getElementById('reconcileModal').classList.add('open');
-    }
-
-    document.getElementById('openReconcileBtn').addEventListener('click', openReconcileModal);
-    document.getElementById('cycleBalance').addEventListener('click', openReconcileModal);
-    document.getElementById('closeReconcileBtn').addEventListener('click', () => {
-      document.getElementById('reconcileModal').classList.remove('open');
-    });
-
-    document.getElementById('confirmReconcileBtn').addEventListener('click', async () => {
-      const realVal = parseFloat(document.getElementById('reconcileRealInput').value);
-      if (isNaN(realVal)) return;
-
-      const { balance, start, end } = getCycleSummary(state.cycleOffset);
-      const diff = Math.round((realVal - balance) * 100) / 100;
-
-      if (Math.abs(diff) < 0.01) {
-        alert('O saldo já está certo! Não há diferença a ajustar.');
-        document.getElementById('reconcileModal').classList.remove('open');
-        return;
-      }
-
-      const today = new Date();
-      let txDate = today.toISOString().slice(0, 10);
-      if (today < start || today > end) {
-        txDate = end.toISOString().slice(0, 10);
-      }
-
-      state.transactions.push({
-        id: 'tx_rec_' + Date.now(),
-        type: diff > 0 ? 'income' : 'expense',
-        paymentMethod: 'account',
-        amount: Math.abs(diff),
-        description: 'Acerto de Saldo (Reconciliação)',
-        category: diff > 0 ? 'reembolso' : 'outros_desp',
-        date: txDate
-      });
-
-      await saveState();
-      document.getElementById('reconcileModal').classList.remove('open');
-      render();
-    });
-
     // --- Importação PDF com Aprendizagem & Deteção de Duplicados (±3 dias) ---
     function normalizeMerchantKey(desc) {
-      return desc
+      return String(desc || '')
         .toUpperCase()
         .normalize('NFD').replace(/[̀-ͯ]/g, '')
         .replace(/(COMPRA|PAGAMENTO|MB|MULTIBANCO|CARTAO|DEB|CRED|TRF|TRANSFERENCIA|POS|TPA)/g, ' ')
@@ -1996,7 +1968,7 @@
 
     function predictCategory(type, description) {
       const normKey = normalizeMerchantKey(description);
-      const upperDesc = description.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const upperDesc = String(description || '').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
       if (normKey && state.learnedRules[normKey]) {
         const learned = state.learnedRules[normKey];
@@ -2050,13 +2022,9 @@
     }
 
     async function extractTransactionsFromPdf(file) {
-      if (!window.pdfjsLib) {
-        alert('O leitor de PDF ainda está a carregar. Tenta novamente dentro de segundos.');
-        return [];
-      }
-
+      const pdfLib = await ensurePdfJsLoaded();
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const pdf = await pdfLib.getDocument({ data: arrayBuffer }).promise;
       const defaultYear = new Date().getFullYear();
       const items = [];
 
@@ -2166,54 +2134,6 @@
       document.getElementById('pdfModal').classList.add('open');
     }
 
-    document.getElementById('importPdfBtn').addEventListener('click', () => {
-      document.getElementById('pdfFileInput').click();
-    });
-
-    document.getElementById('pdfFileInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      try {
-        parsedPdfItems = await extractTransactionsFromPdf(file);
-        if (parsedPdfItems.length === 0) {
-          alert('Não foram detetados movimentos legíveis neste PDF. Verifica se o ficheiro tem texto selecionável.');
-        } else {
-          renderPdfPreviewModal();
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Erro ao processar o ficheiro PDF.');
-      }
-      e.target.value = '';
-    });
-
-    document.getElementById('closePdfModalBtn').addEventListener('click', () => {
-      document.getElementById('pdfModal').classList.remove('open');
-    });
-
-    document.getElementById('confirmPdfImportBtn').addEventListener('click', async () => {
-      const toImport = parsedPdfItems.filter(i => i.selected);
-      toImport.forEach((item, idx) => {
-        state.transactions.push({
-          id: 'tx_pdf_' + Date.now() + '_' + idx,
-          type: item.type,
-          paymentMethod: 'account',
-          amount: item.amount,
-          description: item.description,
-          category: item.category,
-          date: item.date
-        });
-      });
-
-      await saveState();
-      document.getElementById('pdfModal').classList.remove('open');
-      render();
-      if (toImport.length > 0) {
-        alert(`${toImport.length} movimento(s) importado(s) com sucesso!`);
-      }
-    });
-
-    // --- Gestão de Regras Aprendidas ---
     function renderRulesModal() {
       const container = document.getElementById('rulesListContainer');
       const entries = Object.entries(state.learnedRules);
@@ -2225,9 +2145,8 @@
       }
 
       entries.forEach(([key, catId]) => {
-        const cat = getCategoryObj('expense', catId).id === catId && getCategoryObj('expense', catId).name !== 'Geral'
-          ? getCategoryObj('expense', catId)
-          : getCategoryObj('income', catId);
+        const expCat = getCategoryObj('expense', catId);
+        const cat = (expCat.id === catId && expCat.name !== 'Geral') ? expCat : getCategoryObj('income', catId);
 
         const row = document.createElement('div');
         row.className = 'rule-row';
@@ -2248,254 +2167,414 @@
       });
     }
 
-    document.getElementById('openRulesBtn').addEventListener('click', () => {
-      renderRulesModal();
-      document.getElementById('rulesModal').classList.add('open');
-    });
+    function openReconcileModal() {
+      const { balance } = getCycleSummary(state.cycleOffset);
+      document.getElementById('reconcileCurrentDisplay').value = formatCurrency(balance);
+      document.getElementById('reconcileRealInput').value = balance.toFixed(2);
+      document.getElementById('reconcileModal').classList.add('open');
+    }
 
-    document.getElementById('closeRulesModalBtn').addEventListener('click', () => {
-      document.getElementById('rulesModal').classList.remove('open');
-    });
+    // --- Registo Síncrono de Todos os Eventos (Garante resposta imediata) ---
+    function bindAllEvents() {
+      // Tema
+      document.getElementById('themeToggle').addEventListener('click', async () => {
+        state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(state.settings.theme);
+        await saveState();
+      });
 
-    // --- Event Listeners Gerais ---
-    document.getElementById('themeToggle').addEventListener('click', async () => {
-      state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
-      applyTheme(state.settings.theme);
-      await saveState();
-    });
+      // Navegação de Ciclo
+      document.getElementById('prevCycleBtn').addEventListener('click', () => {
+        state.cycleOffset -= 1;
+        render();
+      });
 
-    document.getElementById('prevCycleBtn').addEventListener('click', () => {
-      state.cycleOffset -= 1;
-      render();
-    });
+      document.getElementById('nextCycleBtn').addEventListener('click', () => {
+        state.cycleOffset += 1;
+        render();
+      });
 
-    document.getElementById('nextCycleBtn').addEventListener('click', () => {
-      state.cycleOffset += 1;
-      render();
-    });
+      // Pesquisa e Filtros
+      document.getElementById('searchInput').addEventListener('input', render);
+      document.getElementById('categoryFilter').addEventListener('change', render);
 
-    document.getElementById('searchInput').addEventListener('input', render);
-    document.getElementById('categoryFilter').addEventListener('change', render);
-
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const target = btn.dataset.target;
-        document.querySelectorAll('.view-section').forEach(sec => {
-          sec.classList.toggle('active', sec.id === target);
+      // Abas inferiores
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const target = btn.dataset.target;
+          document.querySelectorAll('.view-section').forEach(sec => {
+            sec.classList.toggle('active', sec.id === target);
+          });
         });
       });
-    });
 
-    // Fixos do Ciclo listeners
-    async function toggleFixedSection() {
-      state.settings.fixedCollapsed = !state.settings.fixedCollapsed;
-      await saveState();
-      render();
-    }
-    document.getElementById('collapseFixedBtn').addEventListener('click', toggleFixedSection);
-    document.getElementById('toggleFixedCollapse').addEventListener('click', toggleFixedSection);
+      // Reconciliação de Saldo
+      document.getElementById('openReconcileBtn').addEventListener('click', openReconcileModal);
+      document.getElementById('cycleBalance').addEventListener('click', openReconcileModal);
+      document.getElementById('closeReconcileBtn').addEventListener('click', () => {
+        document.getElementById('reconcileModal').classList.remove('open');
+      });
+      document.getElementById('confirmReconcileBtn').addEventListener('click', async () => {
+        const realVal = parseFloat(document.getElementById('reconcileRealInput').value);
+        if (isNaN(realVal)) return;
 
-    document.getElementById('openManageFixedBtn').addEventListener('click', () => {
-      renderFixedTemplatesModal();
-      document.getElementById('fixedModal').classList.add('open');
-    });
+        const { balance, start, end } = getCycleSummary(state.cycleOffset);
+        const diff = Math.round((realVal - balance) * 100) / 100;
 
-    document.getElementById('closeFixedModalBtn').addEventListener('click', () => {
-      document.getElementById('fixedModal').classList.remove('open');
-    });
+        if (Math.abs(diff) < 0.01) {
+          alert('O saldo já está certo! Não há diferença a ajustar.');
+          document.getElementById('reconcileModal').classList.remove('open');
+          return;
+        }
 
-    document.getElementById('addFixedForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('fixedNameInput').value.trim();
-      const amount = parseFloat(document.getElementById('fixedAmountInput').value);
-      const category = document.getElementById('fixedCatInput').value;
-      if (!name || !amount || amount <= 0) return;
+        const today = new Date();
+        let txDate = today.toISOString().slice(0, 10);
+        if (today < start || today > end) {
+          txDate = end.toISOString().slice(0, 10);
+        }
 
-      state.fixedExpenses.push({
-        id: 'fix_' + Date.now(),
-        name,
-        amount,
-        category
+        state.transactions.push({
+          id: 'tx_rec_' + Date.now(),
+          type: diff > 0 ? 'income' : 'expense',
+          paymentMethod: 'account',
+          amount: Math.abs(diff),
+          description: 'Acerto de Saldo (Reconciliação)',
+          category: diff > 0 ? 'reembolso' : 'outros_desp',
+          date: txDate
+        });
+
+        await saveState();
+        document.getElementById('reconcileModal').classList.remove('open');
+        render();
       });
 
-      document.getElementById('fixedNameInput').value = '';
-      document.getElementById('fixedAmountInput').value = '';
-      await saveState();
-      renderFixedTemplatesModal();
-      render();
-    });
+      // Liquidar Crédito
+      document.getElementById('settleCreditBtn').addEventListener('click', async () => {
+        const { start, end, unsettledCredit } = getCycleSummary(state.cycleOffset);
+        if (unsettledCredit <= 0) return;
+        if (!confirm(`Confirmas a liquidação de ${formatCurrency(unsettledCredit)} do cartão de crédito para abater no saldo da conta?`)) return;
 
-    // Modal Novo / Editar Movimento
-    document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
-    document.getElementById('closeTxModalBtn').addEventListener('click', () => {
-      document.getElementById('txModal').classList.remove('open');
-    });
+        state.transactions.forEach(tx => {
+          const d = new Date(tx.date + 'T12:00:00');
+          if (d >= start && d <= end && tx.type === 'expense' && tx.paymentMethod === 'credit' && !tx.creditSettled) {
+            tx.creditSettled = true;
+          }
+        });
 
-    document.querySelectorAll('.type-btn').forEach(btn => {
-      btn.addEventListener('click', () => setModalType(btn.dataset.type));
-    });
+        await saveState();
+        render();
+      });
 
-    document.querySelectorAll('.pay-chip').forEach(btn => {
-      btn.addEventListener('click', () => setPayMethod(btn.dataset.pay));
-    });
-
-    document.getElementById('txForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const id = document.getElementById('txId').value;
-      const amount = parseFloat(document.getElementById('txAmount').value);
-      const description = document.getElementById('txDesc').value.trim();
-      const category = document.getElementById('txCategory').value;
-      const date = document.getElementById('txDate').value;
-
-      if (!amount || amount <= 0 || !description || !date) return;
-
-      const normKey = normalizeMerchantKey(description);
-      if (normKey) {
-        state.learnedRules[normKey] = category;
+      // Fixos do Ciclo
+      async function toggleFixedSection() {
+        state.settings.fixedCollapsed = !state.settings.fixedCollapsed;
+        await saveState();
+        render();
       }
+      document.getElementById('collapseFixedBtn').addEventListener('click', toggleFixedSection);
+      document.getElementById('toggleFixedCollapse').addEventListener('click', toggleFixedSection);
 
-      const paymentMethod = currentTxType === 'expense' ? currentPayMethod : 'account';
+      document.getElementById('openManageFixedBtn').addEventListener('click', () => {
+        renderFixedTemplatesModal();
+        document.getElementById('fixedModal').classList.add('open');
+      });
 
-      if (id) {
-        const idx = state.transactions.findIndex(t => t.id === id);
-        if (idx !== -1) {
-          const prev = state.transactions[idx];
-          state.transactions[idx] = {
-            ...prev,
+      document.getElementById('closeFixedModalBtn').addEventListener('click', () => {
+        document.getElementById('fixedModal').classList.remove('open');
+      });
+
+      document.getElementById('addFixedForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('fixedNameInput').value.trim();
+        const amount = parseFloat(document.getElementById('fixedAmountInput').value);
+        const category = document.getElementById('fixedCatInput').value;
+        if (!name || !amount || amount <= 0) return;
+
+        state.fixedExpenses.push({
+          id: 'fix_' + Date.now(),
+          name,
+          amount,
+          category
+        });
+
+        document.getElementById('fixedNameInput').value = '';
+        document.getElementById('fixedAmountInput').value = '';
+        await saveState();
+        renderFixedTemplatesModal();
+        render();
+      });
+
+      // Modal Novo / Editar Movimento
+      document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
+      document.getElementById('closeTxModalBtn').addEventListener('click', () => {
+        document.getElementById('txModal').classList.remove('open');
+      });
+
+      document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.addEventListener('click', () => setModalType(btn.dataset.type));
+      });
+
+      document.querySelectorAll('.pay-chip').forEach(btn => {
+        btn.addEventListener('click', () => setPayMethod(btn.dataset.pay));
+      });
+
+      document.getElementById('txForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('txId').value;
+        const amount = parseFloat(document.getElementById('txAmount').value);
+        const description = document.getElementById('txDesc').value.trim();
+        const category = document.getElementById('txCategory').value;
+        const date = document.getElementById('txDate').value;
+
+        if (!amount || amount <= 0 || !description || !date) return;
+
+        const normKey = normalizeMerchantKey(description);
+        if (normKey) {
+          state.learnedRules[normKey] = category;
+        }
+
+        const paymentMethod = currentTxType === 'expense' ? currentPayMethod : 'account';
+
+        if (id) {
+          const idx = state.transactions.findIndex(t => t.id === id);
+          if (idx !== -1) {
+            const prev = state.transactions[idx];
+            state.transactions[idx] = {
+              ...prev,
+              type: currentTxType,
+              paymentMethod,
+              creditSettled: paymentMethod === 'credit' ? (prev.creditSettled || false) : false,
+              amount,
+              description,
+              category,
+              date
+            };
+          }
+        } else {
+          state.transactions.push({
+            id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
             type: currentTxType,
             paymentMethod,
-            creditSettled: paymentMethod === 'credit' ? (prev.creditSettled || false) : false,
+            creditSettled: false,
             amount,
             description,
             category,
             date
-          };
+          });
         }
-      } else {
-        state.transactions.push({
-          id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
-          type: currentTxType,
-          paymentMethod,
-          creditSettled: false,
-          amount,
-          description,
-          category,
-          date
-        });
-      }
 
-      await saveState();
-      document.getElementById('txModal').classList.remove('open');
-      render();
-    });
-
-    document.getElementById('deleteTxBtn').addEventListener('click', async () => {
-      const id = document.getElementById('txId').value;
-      if (id && confirm('Eliminar este movimento?')) {
-        state.transactions = state.transactions.filter(t => t.id !== id);
         await saveState();
         document.getElementById('txModal').classList.remove('open');
         render();
-      }
-    });
+      });
 
-    // Definições e Backup
-    document.getElementById('openSettingsBtn').addEventListener('click', () => {
-      document.getElementById('cycleStartDayInput').value = state.settings.cycleStartDay;
-      document.getElementById('monthlyBudgetInput').value = state.settings.monthlyBudget;
-      document.getElementById('rulesCountLabel').textContent = Object.keys(state.learnedRules).length;
-      document.getElementById('settingsModal').classList.add('open');
-    });
+      document.getElementById('deleteTxBtn').addEventListener('click', async () => {
+        const id = document.getElementById('txId').value;
+        if (id && confirm('Eliminar este movimento?')) {
+          state.transactions = state.transactions.filter(t => t.id !== id);
+          await saveState();
+          document.getElementById('txModal').classList.remove('open');
+          render();
+        }
+      });
 
-    document.getElementById('closeSettingsBtn').addEventListener('click', () => {
-      document.getElementById('settingsModal').classList.remove('open');
-    });
+      // Importação PDF
+      document.getElementById('importPdfBtn').addEventListener('click', () => {
+        document.getElementById('pdfFileInput').click();
+      });
 
-    document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
-      const day = parseInt(document.getElementById('cycleStartDayInput').value) || 21;
-      const budget = parseFloat(document.getElementById('monthlyBudgetInput').value) || 0;
-      state.settings.cycleStartDay = Math.min(28, Math.max(1, day));
-      state.settings.monthlyBudget = Math.max(0, budget);
-      state.cycleOffset = 0;
-      await saveState();
-      document.getElementById('settingsModal').classList.remove('open');
-      render();
-    });
-
-    document.getElementById('exportJsonBtn').addEventListener('click', () => {
-      const dataStr = JSON.stringify({
-        app: 'UnoFin',
-        version: '2.4',
-        exportedAt: new Date().toISOString(),
-        settings: state.settings,
-        transactions: state.transactions,
-        fixedExpenses: state.fixedExpenses,
-        learnedRules: state.learnedRules
-      }, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `unofin_backup_${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-
-    document.getElementById('importJsonBtn').addEventListener('click', () => {
-      document.getElementById('importFileInput').click();
-    });
-
-    document.getElementById('importFileInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async (ev) => {
+      document.getElementById('pdfFileInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
         try {
-          const imported = JSON.parse(ev.target.result);
-          if (Array.isArray(imported.transactions)) {
-            state.transactions = imported.transactions;
-            if (imported.settings) {
-              state.settings = { ...state.settings, ...imported.settings };
-            }
-            if (Array.isArray(imported.fixedExpenses)) {
-              state.fixedExpenses = imported.fixedExpenses;
-            }
-            if (imported.learnedRules) {
-              state.learnedRules = { ...state.learnedRules, ...imported.learnedRules };
-            }
-            await saveState();
-            applyTheme(state.settings.theme);
-            render();
-            alert('Backup restaurado com sucesso!');
-            document.getElementById('settingsModal').classList.remove('open');
+          parsedPdfItems = await extractTransactionsFromPdf(file);
+          if (parsedPdfItems.length === 0) {
+            alert('Não foram detetados movimentos legíveis neste PDF. Verifica se o ficheiro tem texto selecionável.');
           } else {
-            alert('Ficheiro de backup inválido.');
+            renderPdfPreviewModal();
           }
         } catch (err) {
-          alert('Erro ao ler o ficheiro JSON.');
+          console.error(err);
+          alert('Não foi possível ler o PDF: ' + (err.message || 'verifica a ligação à internet na primeira leitura.'));
         }
-      };
-      reader.readAsText(file);
-      e.target.value = '';
-    });
+        e.target.value = '';
+      });
 
-    // Registo do Service Worker (PWA Offline)
+      document.getElementById('closePdfModalBtn').addEventListener('click', () => {
+        document.getElementById('pdfModal').classList.remove('open');
+      });
+
+      document.getElementById('confirmPdfImportBtn').addEventListener('click', async () => {
+        const toImport = parsedPdfItems.filter(i => i.selected);
+        toImport.forEach((item, idx) => {
+          state.transactions.push({
+            id: 'tx_pdf_' + Date.now() + '_' + idx,
+            type: item.type,
+            paymentMethod: 'account',
+            amount: item.amount,
+            description: item.description,
+            category: item.category,
+            date: item.date
+          });
+        });
+
+        await saveState();
+        document.getElementById('pdfModal').classList.remove('open');
+        render();
+        if (toImport.length > 0) {
+          alert(`${toImport.length} movimento(s) importado(s) com sucesso!`);
+        }
+      });
+
+      // Regras Memorizadas
+      document.getElementById('openRulesBtn').addEventListener('click', () => {
+        renderRulesModal();
+        document.getElementById('rulesModal').classList.add('open');
+      });
+
+      document.getElementById('closeRulesModalBtn').addEventListener('click', () => {
+        document.getElementById('rulesModal').classList.remove('open');
+      });
+
+      // Exportar Resumo
+      document.getElementById('exportReportBtn').addEventListener('click', async () => {
+        const { start, end, cycleTxs, income, totalExpense, balance } = getCycleSummary(state.cycleOffset);
+        const byCat = {};
+        cycleTxs.filter(t => t.type === 'expense').forEach(t => {
+          byCat[t.category] = (byCat[t.category] || 0) + (Number(t.amount) || 0);
+        });
+
+        let lines = [
+          `📊 RESUMO UNOFIN (${formatDateShort(start)} a ${formatDateShort(end)})`,
+          `• Receitas: ${formatCurrency(income)}`,
+          `• Despesas: ${formatCurrency(totalExpense)}`,
+          `• Saldo: ${formatCurrency(balance)}`,
+          ``,
+          `Despesas por Categoria:`
+        ];
+
+        Object.entries(byCat).sort((a, b) => b[1] - a[1]).forEach(([catId, val]) => {
+          const cat = getCategoryObj('expense', catId);
+          lines.push(`- ${cat.name}: ${formatCurrency(val)}`);
+        });
+
+        const reportText = lines.join('
+');
+
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: 'Resumo UnoFin', text: reportText });
+            return;
+          } catch (_) {}
+        }
+
+        try {
+          await navigator.clipboard.writeText(reportText);
+          alert('Resumo do ciclo copiado para a área de transferência!');
+        } catch (_) {
+          alert(reportText);
+        }
+      });
+
+      // Definições e Backup
+      document.getElementById('openSettingsBtn').addEventListener('click', () => {
+        document.getElementById('cycleStartDayInput').value = state.settings.cycleStartDay;
+        document.getElementById('monthlyBudgetInput').value = state.settings.monthlyBudget;
+        document.getElementById('rulesCountLabel').textContent = Object.keys(state.learnedRules).length;
+        document.getElementById('settingsModal').classList.add('open');
+      });
+
+      document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+        document.getElementById('settingsModal').classList.remove('open');
+      });
+
+      document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+        const day = parseInt(document.getElementById('cycleStartDayInput').value) || 21;
+        const budget = parseFloat(document.getElementById('monthlyBudgetInput').value) || 0;
+        state.settings.cycleStartDay = Math.min(28, Math.max(1, day));
+        state.settings.monthlyBudget = Math.max(0, budget);
+        state.cycleOffset = 0;
+        await saveState();
+        document.getElementById('settingsModal').classList.remove('open');
+        render();
+      });
+
+      document.getElementById('exportJsonBtn').addEventListener('click', () => {
+        const dataStr = JSON.stringify({
+          app: 'UnoFin',
+          version: '2.4.1',
+          exportedAt: new Date().toISOString(),
+          settings: state.settings,
+          transactions: state.transactions,
+          fixedExpenses: state.fixedExpenses,
+          learnedRules: state.learnedRules
+        }, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `unofin_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+
+      document.getElementById('importJsonBtn').addEventListener('click', () => {
+        document.getElementById('importFileInput').click();
+      });
+
+      document.getElementById('importFileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+          try {
+            const imported = JSON.parse(ev.target.result);
+            if (Array.isArray(imported.transactions)) {
+              state.transactions = imported.transactions;
+              if (imported.settings) {
+                state.settings = { ...state.settings, ...imported.settings };
+              }
+              if (Array.isArray(imported.fixedExpenses)) {
+                state.fixedExpenses = imported.fixedExpenses;
+              }
+              if (imported.learnedRules) {
+                state.learnedRules = { ...state.learnedRules, ...imported.learnedRules };
+              }
+              await saveState();
+              applyTheme(state.settings.theme);
+              render();
+              alert('Backup restaurado com sucesso!');
+              document.getElementById('settingsModal').classList.remove('open');
+            } else {
+              alert('Ficheiro de backup inválido.');
+            }
+          } catch (err) {
+            alert('Erro ao ler o ficheiro JSON.');
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      });
+    }
+
+    // Registo do Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
       });
     }
 
-    // Arranque Assíncrono
-    (async function init() {
-      await loadState();
-      populateCategorySelects();
+    // Arranque Seguro: liga os botões e desenha o ecrã IMEDIATAMENTE, antes de qualquer operação assíncrona
+    populateCategorySelects();
+    bindAllEvents();
+    render();
+    loadState().then(() => {
       render();
-    })();
+    });
   </script>
 </body>
 </html>
