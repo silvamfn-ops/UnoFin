@@ -1,4 +1,4 @@
-export const APP_VERSION = 'v1.0.0';
+export const APP_VERSION = 'v1.0.1';
 export const DAY_MS = 86400000;
 const UI_PREFS_KEY = 'unofin-ui-prefs-v1';
 

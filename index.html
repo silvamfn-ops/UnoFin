@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="UnoFin">
-  <title>UnoFin v1.0.0 — Gestão financeira pessoal</title>
+  <title>UnoFin v1.0.1 — Gestão financeira pessoal</title>
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
   <link rel="apple-touch-icon" href="./icons/icon.svg">
@@ -22,10 +22,47 @@
         <path d="M38 40V68C38 80.1503 47.8497 90 60 90C72.1503 90 82 80.1503 82 68V40" stroke="#48B888" stroke-width="11" stroke-linecap="round"/>
         <circle cx="60" cy="44" r="7" fill="#D8BD88"/>
       </svg>
-      <p class="app-splash-text">A carregar a tua gestão financeira…</p>
-      <div class="app-splash-spinner"></div>
+      <p id="appSplashText" class="app-splash-text">A carregar a tua gestão financeira…</p>
+      <div id="appSplashSpinner" class="app-splash-spinner"></div>
+      <div id="appSplashFallback" style="display:none;margin-top:16px">
+        <p id="appSplashErrorMsg" style="font-size:12px;color:#f6c88f;margin:0 0 12px;line-height:1.4"></p>
+        <button type="button" id="appSplashEnterBtn" style="background:#48b888;color:#0d1c2e;border:0;border-radius:10px;padding:10px 18px;font-weight:700;font-size:13px;cursor:pointer">Entrar na aplicação</button>
+      </div>
     </div>
   </div>
+  <script>
+    (function () {
+      var splash = document.getElementById('appSplashScreen');
+      if (!splash) return;
+      window.__unofinHideSplash = function () {
+        if (!splash || splash.classList.contains('is-hidden')) return;
+        splash.classList.add('is-hidden');
+        setTimeout(function () { if (splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 460);
+      };
+      var lastErr = '';
+      window.addEventListener('error', function (e) {
+        if (e && e.message) lastErr = e.message;
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        if (e && e.reason) lastErr = (e.reason.message || String(e.reason));
+      });
+      setTimeout(function () {
+        if (!window.__unofinBooted) {
+          var fb = document.getElementById('appSplashFallback');
+          var msg = document.getElementById('appSplashErrorMsg');
+          var btn = document.getElementById('appSplashEnterBtn');
+          if (fb && msg && btn) {
+            msg.textContent = lastErr
+              ? 'Aviso no arranque: ' + lastErr
+              : 'O arranque está a demorar mais do que o esperado.';
+            fb.style.display = 'block';
+            btn.onclick = window.__unofinHideSplash;
+          }
+        }
+      }, 2200);
+      setTimeout(window.__unofinHideSplash, 3800);
+    })();
+  </script>
 
   <div class="app-shell">
     <header>

@@ -15,7 +15,7 @@ export const DEFAULT_CATEGORIES = [
 export function createInitialState() {
   const now = Date.now();
   return {
-    version: '1.0.0',
+    version: '1.0.1',
     household: {
       id: null,
       adult1_name: 'Pessoal',
@@ -54,7 +54,7 @@ export function loadLocalState() {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return createInitialState();
     return {
-      version: '1.0.0',
+      version: '1.0.1',
       household: {
         id: null,
         adult1_name: 'Pessoal',

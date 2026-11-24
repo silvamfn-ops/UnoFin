@@ -1180,7 +1180,8 @@ async function initStorageProtectionAndBackupReminder() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function bootstrapApp() {
+  try {
   applyThemeAndDensity(() => drawSavingsChart(state));
   if (window.matchMedia) {
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => applyThemeAndDensity(() => drawSavingsChart(state)));
@@ -2617,26 +2618,33 @@ Os ${usedCount} movimento(s) associados serão reatribuídos automaticamente par
   render();
   initStorageProtectionAndBackupReminder();
   checkAutomaticCycleRollover();
-});
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
-  });
+  } catch (err) {
+    console.error('Erro no arranque da UnoFin:', err);
+    try { showToast('Aviso no arranque: ' + (err?.message || err), { type: 'error', duration: 6000 }); } catch (_) {}
+  } finally {
+    window.__unofinBooted = true;
+    setTimeout(() => {
+      if (typeof window.__unofinHideSplash === 'function') {
+        window.__unofinHideSplash();
+      } else {
+        const splash = document.getElementById('appSplashScreen');
+        if (splash) {
+          splash.classList.add('is-hidden');
+          setTimeout(() => splash.remove(), 460);
+        }
+      }
+    }, 350);
+  }
 }
 
-(function initSplashScreen() {
-  const splash = document.getElementById('appSplashScreen');
-  if (!splash) return;
-  const hideSplash = () => {
-    if (splash.classList.contains('is-hidden')) return;
-    splash.classList.add('is-hidden');
-    setTimeout(() => { splash.remove(); }, 460);
-  };
-  const minDelay = new Promise(resolve => setTimeout(resolve, 650));
-  const domReady = document.readyState === 'complete'
-    ? Promise.resolve()
-    : new Promise(resolve => window.addEventListener('load', resolve, { once: true }));
-  Promise.all([minDelay, domReady]).then(hideSplash);
-  setTimeout(hideSplash, 2600);
-})();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapApp, { once: true });
+} else {
+  bootstrapApp();
+}
+
+if ('serviceWorker' in navigator) {
+  const regSw = () => navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {});
+  if (document.readyState === 'complete') regSw();
+  else window.addEventListener('load', regSw, { once: true });
+}

@@ -1,4 +1,4 @@
-# UnoFin v1.0.0 — Aplicação Web Progressiva (PWA)
+# UnoFin v1.0.1 — Aplicação Web Progressiva (PWA)
 
 Aplicação de gestão financeira pessoal **100% local e privada** (sem servidores externos nem contas obrigatórias), concebida para funcionamento nativo em **iPhone (Safari)**, **Android (Chrome)** e **Computador (Windows / macOS / Linux)**.
 
