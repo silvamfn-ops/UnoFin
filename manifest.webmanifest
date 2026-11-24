@@ -1,0 +1,19 @@
+{
+  "name": "UnoFin — Gestão Financeira Pessoal",
+  "short_name": "UnoFin",
+  "description": "Gestão de orçamento, ciclos financeiros, cartões de crédito e poupança pessoal 100% local.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#12263d",
+  "theme_color": "#142b45",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" id="metaThemeColor" content="#142b45">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="UnoFin">
+  <title>UnoFin v1.0.0 — Gestão financeira pessoal</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <div id="appSplashScreen" class="app-splash-screen" role="status" aria-label="A iniciar UnoFin">
+    <div class="app-splash-inner">
+      <svg class="app-splash-logo" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="120" height="120" rx="28" fill="#173653"/>
+        <rect x="4" y="4" width="112" height="112" rx="24" stroke="#C5A56B" stroke-opacity="0.4" stroke-width="2"/>
+        <path d="M38 40V68C38 80.1503 47.8497 90 60 90C72.1503 90 82 80.1503 82 68V40" stroke="#48B888" stroke-width="11" stroke-linecap="round"/>
+        <circle cx="60" cy="44" r="7" fill="#D8BD88"/>
+      </svg>
+      <p class="app-splash-text">A carregar a tua gestão financeira…</p>
+      <div class="app-splash-spinner"></div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <header>
+      <div class="wrap header-inner">
+        <div class="header-brand-block">
+          <div class="brandline">
+            <svg class="unofin-logo-svg" width="38" height="38" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="120" rx="28" fill="#142b45"/>
+              <rect x="4" y="4" width="112" height="112" rx="24" stroke="#d8bd88" stroke-opacity="0.45" stroke-width="3"/>
+              <path d="M38 40V68C38 80.1503 47.8497 90 60 90C72.1503 90 82 80.1503 82 68V40" stroke="#48b888" stroke-width="12" stroke-linecap="round"/>
+              <circle cx="60" cy="44" r="7" fill="#e1c58f"/>
+            </svg>
+            <div>
+              <h1>UnoFin <span class="brand-accent-2">1</span></h1>
+              <p>Orçamento &amp; poupança pessoal</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-wrapper">
+          <nav id="mainNav" aria-label="Navegação principal">
+            <button type="button" data-tab="resumo" class="active"><span class="nav-ico">📊</span><span>Resumo</span></button>
+            <button type="button" data-tab="movimentos"><span class="nav-ico">🧾</span><span>Movimentos</span></button>
+            <button type="button" data-tab="objetivo"><span class="nav-ico">🎯</span><span>Objetivos</span></button>
+            <button type="button" data-tab="graficos"><span class="nav-ico">📈</span><span>Análise</span></button>
+            <button type="button" data-tab="recorrentes" class="desktop-only-tab"><span class="nav-ico">🔁</span><span>Encargos</span><span id="desktopRecBadge" class="nav-badge" hidden>0</span></button>
+            <button type="button" data-tab="calendario" class="desktop-only-tab"><span class="nav-ico">📅</span><span>Calendário</span></button>
+            <button type="button" data-tab="orcamento" class="desktop-only-tab"><span class="nav-ico">⚙️</span><span>Orçamento</span></button>
+            <button type="button" data-tab="dados" class="desktop-only-tab"><span class="nav-ico">💾</span><span>Dados</span></button>
+            <button type="button" id="mobileMoreBtn" class="mobile-more-btn" aria-expanded="false"><span class="nav-ico">☰</span><span>Mais</span><span id="mobileMoreBadge" class="nav-badge" hidden>0</span></button>
+          </nav>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" id="themeQuickToggleBtn" class="header-icon-btn" title="Alternar tema">🌓</button>
+          <button type="button" id="privacyToggleBtn" class="header-icon-btn" title="Ocultar/mostrar valores">👁️</button>
+          <button type="button" id="lockAppHeaderBtn" class="header-icon-btn" title="Bloquear aplicação" hidden>🔒</button>
+          <span class="version-badge">v1.0.0 · Local</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap main-content-wrap">
+      <!-- RESUMO -->
+      <section id="resumo" class="view active" data-summary-level="detailed">
+        <div class="cycle-header row" style="flex-wrap:wrap;gap:10px">
+          <div style="min-width:200px;flex:1">
+            <h2 id="monthTitle" style="margin:0">Ciclo atual</h2>
+            <div id="cycleRange" class="small"></div>
+          </div>
+          <div class="row" style="gap:6px;flex-wrap:wrap">
+            <div class="detail-segmented" role="group" aria-label="Nível de detalhe">
+              <button type="button" class="seg-btn" data-summary-level-btn="basic">Básico</button>
+              <button type="button" class="seg-btn active" data-summary-level-btn="detailed">Detalhado</button>
+            </div>
+            <button type="button" class="icon-btn" id="prevCycleBtn" title="Ciclo anterior">‹</button>
+            <select id="cycleSelect" style="width:auto;min-width:170px;min-height:36px;padding:5px 9px"></select>
+            <button type="button" class="icon-btn" id="nextCycleBtn" title="Ciclo seguinte">›</button>
+          </div>
+        </div>
+
+        <div class="stats summary-stats">
+          <div class="stat stat-inc">
+            <span>Rendimentos do ciclo</span>
+            <b id="inc" class="plus">0,00 €</b>
+          </div>
+          <div class="stat stat-exp">
+            <span>Despesas pagas (conta)</span>
+            <b id="exp" class="minus">0,00 €</b>
+          </div>
+          <div class="stat stat-bal">
+            <div class="row">
+              <span>Saldo em conta</span>
+              <button type="button" class="mini-reconcile-btn" id="openReconcileBtn" title="Acertar saldo com o banco">⚖️ Acertar</button>
+            </div>
+            <b id="bal">0,00 €</b>
+            <div id="ccSpentLine" class="cc-spent-sub" hidden></div>
+            <div id="dailyBurnRateLine" class="burn-rate-sub" hidden></div>
+            <div id="projectedBalLine" class="projected-sub" hidden></div>
+          </div>
+          <div class="stat stat-sav summary-detailed-only">
+            <span>Poupança líquida</span>
+            <b id="savm" class="neutral">0,00 €</b>
+          </div>
+        </div>
+
+        <div id="basicCycleProgressWrap" class="card" hidden>
+          <div class="row"><b>Execução do orçamento</b><span id="basicCycleProgressLabel" class="small"></span></div>
+          <div class="progress"><i id="basicCycleProgressBar" style="width:0%"></i></div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="secondary" id="closeCycleBtn">🏁 Fechar ciclo</button>
+          <button type="button" class="ghost" id="openSimulatorShortcutBtn">🧮 Simular compra</button>
+          <button type="button" class="ghost" id="exportCyclePdfBtn">📄 Relatório PDF</button>
+        </div>
+
+        <div id="alerts"></div>
+
+        <div class="card">
+          <div class="row">
+            <div>
+              <h2 style="margin:0">Despesas por categoria</h2>
+              <div class="small">Barra sólida: pago em conta · Tracejado: a crédito</div>
+            </div>
+            <span class="small"><span class="cc-virtual-swatch"></span> Crédito</span>
+          </div>
+          <div class="cats-dashboard-split" style="margin-top:10px">
+            <div id="cats" class="cats-bars-panel"></div>
+            <div id="catsDonutPanel" class="cats-donut-panel">
+              <canvas id="resumoDonutCanvas" width="190" height="190"></canvas>
+              <div class="cats-donut-center">
+                <span>Total ciclo</span>
+                <b id="resumoDonutTotal">0,00 €</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="creditCardsSummaryCard" class="card summary-detailed-only" hidden>
+          <div class="row">
+            <h2 style="margin:0">Cartões de crédito</h2>
+            <span id="ccTotalDebtBadge" class="pill">0,00 €</span>
+          </div>
+          <div id="creditCardsSummary"></div>
+        </div>
+
+        <div class="card summary-detailed-only">
+          <div class="row">
+            <h2 style="margin:0">Objetivos de poupança</h2>
+            <span id="goalCount" class="pill">0 ativo(s)</span>
+          </div>
+          <div id="goalsSummary"></div>
+        </div>
+
+        <div class="card summary-detailed-only">
+          <h2>Evolução da poupança acumulada</h2>
+          <div class="chart-wrap">
+            <canvas id="savingsChart"></canvas>
+          </div>
+        </div>
+
+        <div class="desktop-right-rail">
+          <div class="card desktop-quick-tx-card">
+            <h2 style="margin:0 0 6px">⚡ Registo rápido</h2>
+            <form id="quickTxForm" class="quick-tx-form">
+              <div class="grid">
+                <div>
+                  <label for="qDate">Data</label>
+                  <input id="qDate" type="date" required>
+                </div>
+                <div>
+                  <label for="qType">Tipo</label>
+                  <select id="qType">
+                    <option value="expense">Despesa</option>
+                    <option value="income">Rendimento</option>
+                    <option value="saving">Poupança</option>
+                    <option value="cc_payment">Pagamento cartão</option>
+                  </select>
+                </div>
+              </div>
+              <label for="qDesc">Descrição</label>
+              <input id="qDesc" type="text" placeholder="Ex.: Supermercado, Combustível…" required>
+              <div class="grid">
+                <div>
+                  <label for="qAmount">Valor (€)</label>
+                  <input id="qAmount" type="text" inputmode="decimal" placeholder="0,00" required>
+                </div>
+                <div>
+                  <label for="qCategory">Categoria</label>
+                  <select id="qCategory"></select>
+                </div>
+              </div>
+              <label for="qCard">Meio de pagamento (se despesa)</label>
+              <select id="qCard"><option value="">Conta / Débito</option></select>
+              <div class="actions">
+                <button type="submit" class="primary" style="width:100%">Guardar movimento</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="recentCard" class="card">
+            <div class="row">
+              <h2 style="margin:0">Últimos movimentos</h2>
+              <button type="button" class="ghost" id="viewAllCycleTxBtn" style="padding:5px 10px;font-size:12px">Ver todos</button>
+            </div>
+            <div id="recent"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MOVIMENTOS -->
+      <section id="movimentos" class="view">
+        <div class="card">
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+            <div>
+              <h2 style="margin:0">Movimentos</h2>
+              <div id="filterCountLabel" class="small">0 movimento(s)</div>
+            </div>
+            <div class="row" style="gap:6px">
+              <button type="button" class="ghost" id="exportMovementsPdfBtn">📄 PDF</button>
+              <button type="button" class="primary" id="openNewTxModalBtn">+ Novo movimento</button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="grid-3">
+              <div>
+                <label for="movementCycle" style="margin-top:0">Ciclo</label>
+                <select id="movementCycle"></select>
+              </div>
+              <div>
+                <label for="filter" style="margin-top:0">Tipo</label>
+                <select id="filter">
+                  <option value="all">Todos</option>
+                  <option value="expense">Despesas (todas)</option>
+                  <option value="cc_expense">Despesas a crédito</option>
+                  <option value="income">Rendimentos</option>
+                  <option value="saving">Poupança</option>
+                  <option value="saving_withdraw">Resgates</option>
+                  <option value="cc_payment">Pagamentos cartão</option>
+                  <option value="transfer">Transferências internas</option>
+                </select>
+              </div>
+              <div>
+                <label for="filterCategory" style="margin-top:0">Categoria</label>
+                <select id="filterCategory"></select>
+              </div>
+            </div>
+
+            <div class="grid-3" style="margin-top:6px">
+              <div>
+                <label for="filterSearch">Pesquisar</label>
+                <input id="filterSearch" type="search" placeholder="Descrição…">
+              </div>
+              <div>
+                <label for="filterDateFrom">De</label>
+                <input id="filterDateFrom" type="date">
+              </div>
+              <div>
+                <label for="filterDateTo">Até</label>
+                <input id="filterDateTo" type="date">
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+              <div class="quick-chips">
+                <button type="button" class="chip active" data-quick-status="all">Todos</button>
+                <button type="button" class="chip" data-quick-status="pending">⏳ Pendentes</button>
+                <button type="button" class="chip" data-quick-status="installments">💳 Prestações</button>
+                <button type="button" class="chip" data-quick-status="skipped">🚫 Ignorados</button>
+              </div>
+              <div class="row" style="gap:6px">
+                <select id="movementSortOrder" style="width:auto;min-height:34px;padding:4px 8px;font-size:12px">
+                  <option value="desc">Mais recentes</option>
+                  <option value="asc">Mais antigos</option>
+                </select>
+                <button type="button" class="ghost" id="resetFiltersBtn" style="padding:5px 10px;font-size:12px" hidden>Limpar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="transactions" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <!-- OBJETIVOS -->
+      <section id="objetivo" class="view">
+        <div class="card">
+          <h2 id="goalFormTitle">Criar objetivo de poupança</h2>
+          <form id="goalForm">
+            <input type="hidden" id="goalId">
+            <label for="goalName">Nome do objetivo</label>
+            <input id="goalName" type="text" placeholder="Ex.: Fundo de emergência, Férias, Moto…" required>
+            <div class="grid">
+              <div>
+                <label for="goalTarget">Meta (€)</label>
+                <input id="goalTarget" type="number" step="0.01" min="1" placeholder="2000" required>
+              </div>
+              <div>
+                <label for="goalDeadline">Data limite (opcional)</label>
+                <input id="goalDeadline" type="date">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="primary" id="goalSave">Guardar objetivo</button>
+              <button type="button" class="ghost" id="goalCancel" hidden>Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="goalList"></div>
+
+        <div id="goalMovementsCard" class="card goal-movements-panel" hidden>
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:8px">
+            <div>
+              <h2 id="goalMovementsTitle" style="margin:0">Movimentos de objetivos</h2>
+              <div id="goalMovementsSubtitle" class="small"></div>
+            </div>
+            <div class="row" style="gap:6px">
+              <button type="button" class="ghost" id="goalShowAllMovesBtn" hidden>Ver todos</button>
+              <button type="button" class="primary" id="goalQuickMoveBtn" hidden>+ Reforçar / Resgatar</button>
+            </div>
+          </div>
+          <div id="goalMovementsSummary" class="day-summary-bar" hidden></div>
+          <div id="goalMovementsList"></div>
+        </div>
+      </section>
+
+      <!-- ANÁLISE / GRÁFICOS -->
+      <section id="graficos" class="view">
+        <div class="card">
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+            <div>
+              <h2 style="margin:0">Análise financeira</h2>
+              <div id="analyticsCycleSubtitle" class="small"></div>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div>
+              <label for="analyticsCycleSelect" style="margin-top:0">Ciclo</label>
+              <select id="analyticsCycleSelect"></select>
+            </div>
+            <div>
+              <label for="analyticsMetric" style="margin-top:0">Métrica</label>
+              <select id="analyticsMetric">
+                <option value="categories">Despesas por categoria</option>
+                <option value="budget_vs_actual">Orçamento vs Real</option>
+                <option value="cycles_trend">Evolução entre ciclos</option>
+              </select>
+            </div>
+            <div>
+              <label for="analyticsChartType" style="margin-top:0">Tipo de gráfico</label>
+              <select id="analyticsChartType">
+                <option value="bar">Barras</option>
+                <option value="pie">Circular</option>
+                <option value="line">Linha</option>
+              </select>
+            </div>
+          </div>
+          <div class="analytics-canvas-box">
+            <canvas id="analyticsCanvas"></canvas>
+          </div>
+          <div id="analyticsLegend" class="analytics-legend"></div>
+        </div>
+      </section>
+
+      <!-- CADERNO DE ENCARGOS -->
+      <section id="recorrentes" class="view">
+        <div class="card">
+          <div class="row" style="flex-wrap:wrap;gap:10px;margin-bottom:10px">
+            <div>
+              <h2 style="margin:0">Caderno de encargos</h2>
+              <div class="small">Controlo mensal de contas fixas, entidades e referências MB</div>
+            </div>
+            <div class="row" style="gap:6px">
+              <span id="encargosProgressBadge" class="pill">0 / 0 pagos</span>
+              <button type="button" class="primary" id="openNewEncargoBtn">+ Novo serviço</button>
+            </div>
+          </div>
+
+          <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:12px;padding:10px;background:var(--surface-2);border-radius:12px">
+            <div style="flex:1;min-width:190px">
+              <label for="encargosCycleSelect" style="margin:0 0 4px">Ciclo a verificar</label>
+              <select id="encargosCycleSelect" style="min-height:36px;padding:5px 9px"></select>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Resumo do ciclo</div>
+              <b id="encargosCycleTotals">0,00 € pago / 0,00 € total</b>
+            </div>
+          </div>
+
+          <div id="encargosChecklist"></div>
+        </div>
+      </section>
+
+      <!-- CALENDÁRIO -->
+      <section id="calendario" class="view">
+        <div id="calSplitLayout" class="cal-split-layout">
+          <div class="card cal-pane-grid">
+            <div class="row" style="flex-wrap:wrap;gap:8px">
+              <h2 id="calTitle" style="margin:0">Calendário</h2>
+              <div class="row" style="gap:5px">
+                <button type="button" class="icon-btn" id="prevCalMonth">‹</button>
+                <input id="calendarMonth" type="month" style="width:auto;min-height:36px;padding:4px 8px">
+                <button type="button" class="icon-btn" id="nextCalMonth">›</button>
+              </div>
+            </div>
+            <div class="cal-legend" style="margin-top:8px">
+              <span><i class="dot dot-exp"></i> Despesa</span>
+              <span><i class="dot dot-inc"></i> Rendimento</span>
+              <span><i class="dot dot-sav"></i> Poupança</span>
+              <span><i class="dot dot-proj"></i> Previsto</span>
+            </div>
+            <div id="calendar" class="calendar"></div>
+          </div>
+
+          <div id="calSplitter" class="cal-splitter" role="separator" tabindex="0" title="Arrasta para ajustar largura">
+            <span class="cal-splitter-grip">⋮</span>
+          </div>
+
+          <div class="card cal-pane-movements">
+            <div class="row" style="flex-wrap:wrap;gap:6px;margin-bottom:8px">
+              <h2 id="dayTitle" style="margin:0">Movimentos do dia</h2>
+              <div class="row" style="gap:5px">
+                <button type="button" class="ghost" id="calScopeToggleBtn" style="padding:5px 9px;font-size:12px">📋 Ver mês inteiro</button>
+                <button type="button" class="ghost" id="calExpandMovementsBtn" style="padding:5px 9px;font-size:12px">⤢ Ampliar</button>
+                <button type="button" class="ghost" id="calSwapOrderBtn" style="padding:5px 9px;font-size:12px" title="Trocar lados">⇄</button>
+              </div>
+            </div>
+            <div id="daySummary" class="day-summary-bar" hidden></div>
+            <div id="dayItems" class="cal-day-items-scroll"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ORÇAMENTO, CARTÕES & SIMULADOR -->
+      <section id="orcamento" class="view">
+        <div class="card">
+          <div class="row">
+            <h2 style="margin:0">Orçamento por categoria</h2>
+            <span id="budgetTotal" class="pill">0,00 €</span>
+          </div>
+          <form id="budgetForm">
+            <div id="budgetFields"></div>
+            <div class="actions">
+              <button type="submit" class="primary">Guardar alterações</button>
+            </div>
+          </form>
+          <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+          <form id="newCategoryForm" class="row" style="gap:8px;flex-wrap:wrap">
+            <input id="newCategoryName" type="text" placeholder="Nova categoria…" style="flex:1;min-width:140px" required>
+            <input id="newCategoryBudget" type="number" step="0.01" min="0" placeholder="Limite (€)" style="width:110px">
+            <button type="submit" class="secondary">+ Criar</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <h2 id="ccFormTitle" style="margin:0">Cartões de crédito</h2>
+            <span id="ccManagerTotalBadge" class="pill">Dívida total: 0,00 €</span>
+          </div>
+          <form id="creditCardForm">
+            <input type="hidden" id="ccId">
+            <div class="grid-3">
+              <div>
+                <label for="ccName">Nome do cartão</label>
+                <input id="ccName" type="text" placeholder="Ex.: Universo, WiZink…" required>
+              </div>
+              <div>
+                <label for="ccLimit">Plafond (€)</label>
+                <input id="ccLimit" type="number" step="0.01" min="0" placeholder="1500">
+              </div>
+              <div>
+                <label for="ccInitialDebt">Dívida inicial (€)</label>
+                <input id="ccInitialDebt" type="number" step="0.01" min="0" value="0">
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="primary" id="ccSaveBtn">Guardar cartão</button>
+              <button type="button" class="ghost" id="ccCancelBtn" hidden>Cancelar</button>
+            </div>
+          </form>
+          <div id="creditCardList" style="margin-top:12px"></div>
+        </div>
+
+        <div class="card simulator-card">
+          <h2>🧮 Simulador de impacto</h2>
+          <p class="small" style="margin-top:0">Testa o impacto de uma compra no saldo atual do teu ciclo.</p>
+          <div class="grid">
+            <div>
+              <label for="simDesc">Artigo / Compra</label>
+              <input id="simDesc" type="text" placeholder="Ex.: Capacete, Eletrodoméstico…">
+            </div>
+            <div>
+              <label for="simAmount">Valor total (€)</label>
+              <input id="simAmount" type="number" step="0.01" min="0" placeholder="0,00">
+            </div>
+          </div>
+          <div class="grid">
+            <div>
+              <label for="simInstallments">Prestações</label>
+              <select id="simInstallments">
+                <option value="1">1x (A pronto)</option>
+                <option value="3">3x sem juros</option>
+                <option value="6">6x sem juros</option>
+                <option value="10">10x sem juros</option>
+                <option value="12">12x sem juros</option>
+              </select>
+            </div>
+            <div>
+              <label for="simCategory">Categoria</label>
+              <select id="simCategory"></select>
+            </div>
+          </div>
+          <input type="hidden" id="simSource" value="bank">
+          <div id="simResultBox" class="sim-result-box" hidden></div>
+          <div id="simActions" class="actions" hidden>
+            <button type="button" class="primary" id="simConvertToTxBtn">Registar como despesa</button>
+            <button type="button" class="ghost" id="simResetBtn">Limpar</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <h2 style="margin:0">🧠 Regras de categorização automática</h2>
+            <span id="autoRulesCountBadge" class="pill">0 regra(s)</span>
+          </div>
+          <form id="addCategoryRuleForm" class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
+            <input id="newRuleKeyword" type="text" placeholder="Palavra-chave (ex.: PINGO DOCE)" style="flex:1;min-width:150px" required>
+            <select id="newRuleCategory" style="width:auto;min-width:150px"></select>
+            <button type="submit" class="secondary">+ Regra</button>
+          </form>
+          <div id="categoryRulesList" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <!-- DADOS, IMPORTAÇÃO, SEGURANÇA & PREFERÊNCIAS -->
+      <section id="dados" class="view">
+        <div class="card">
+          <h2>📄 Importar extrato bancário (PDF / CSV)</h2>
+          <p class="small" style="margin-top:0">Importa movimentos diretamente do extrato PDF ou CSV do teu banco com deteção automática de duplicados.</p>
+          <div class="actions">
+            <label class="primary" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin:0">
+              <span>📂 Escolher PDF ou CSV</span>
+              <input id="csvFileInput" type="file" accept=".pdf,.csv,.txt" hidden>
+            </label>
+            <button type="button" class="secondary" id="togglePasteExtractBtn">📋 Colar texto do extrato</button>
+          </div>
+
+          <div id="pasteExtractBox" style="margin-top:10px" hidden>
+            <textarea id="pasteExtractText" placeholder="Cola aqui as linhas copiadas do homebanking…"></textarea>
+            <div class="actions">
+              <button type="button" class="primary" id="parsePastedTextBtn">Analisar linhas</button>
+              <button type="button" class="ghost" id="cancelPasteTextBtn">Cancelar</button>
+            </div>
+          </div>
+
+          <div id="csvPreviewContainer" style="margin-top:12px" hidden>
+            <div class="row" style="margin-bottom:8px">
+              <label class="checkbox-row" style="margin:0">
+                <input type="checkbox" id="csvToggleAll" checked>
+                <span id="csvSummaryCount" class="small">0 detetado(s)</span>
+              </label>
+            </div>
+            <div id="csvPreviewList" class="csv-preview-box"></div>
+            <div class="actions">
+              <button type="button" class="primary" id="csvConfirmImportBtn">Importar selecionados</button>
+              <button type="button" class="ghost" id="csvCancelImportBtn">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>💾 Cópias de segurança &amp; Exportação</h2>
+          <div id="storagePersistenceStatus" class="alert"></div>
+          <p id="backupReminderLine" class="small"></p>
+          <div class="actions">
+            <button type="button" class="primary" id="exportBackupBtn">⬇️ Exportar cópia JSON</button>
+            <label class="secondary" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin:0">
+              <span>⬆️ Restaurar JSON</span>
+              <input id="importLegacyBackup" type="file" accept=".json" hidden>
+            </label>
+            <button type="button" class="ghost" id="exportCsvBtn">📊 Exportar Excel (CSV)</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <h2 style="margin:0">📲 Instalar como App (PWA)</h2>
+            <span id="installAppBadge" class="pill">Instalação PWA</span>
+          </div>
+          <div id="installAppStatus" class="alert" style="margin-top:10px"></div>
+          <div class="actions">
+            <button type="button" class="primary" id="installPwaBtn">📲 Instalar aplicação neste dispositivo</button>
+          </div>
+          <div id="installManualGuide" class="small" style="margin-top:10px;padding:10px;background:var(--surface-2);border-radius:10px" hidden></div>
+        </div>
+
+        <div class="card">
+          <h2>👤 Perfil &amp; Regras de ciclo</h2>
+          <div class="grid">
+            <div>
+              <label for="userName">O teu nome (para relatórios PDF)</label>
+              <input id="userName" type="text" placeholder="Ex.: Pessoal">
+            </div>
+            <div>
+              <label for="cycleGroupingDays">Agrupamento de rendimentos (dias)</label>
+              <input id="cycleGroupingDays" type="number" min="0" max="20" value="14">
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="primary" id="savePeople">Guardar perfil</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>🎨 Aparência &amp; Segurança local</h2>
+          <div class="grid">
+            <div>
+              <label for="themeMode">Tema visual</label>
+              <select id="themeMode">
+                <option value="auto">Automático (sistema)</option>
+                <option value="light">Modo Claro</option>
+                <option value="dark">Modo Escuro</option>
+              </select>
+            </div>
+            <div>
+              <label for="densityMode">Densidade visual</label>
+              <select id="densityMode">
+                <option value="balanced">Equilibrada</option>
+                <option value="compact">Compacta</option>
+                <option value="detailed">Confortável</option>
+              </select>
+            </div>
+          </div>
+
+          <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+          <div id="securityLockStatus" class="alert"></div>
+          <div class="grid">
+            <div>
+              <label for="newPinInput">Definir PIN local (4 a 6 dígitos)</label>
+              <input id="newPinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+            </div>
+            <div>
+              <label for="autoLockMinutes">Bloqueio automático (minutos)</label>
+              <select id="autoLockMinutes">
+                <option value="0">Apenas ao abrir/bloquear</option>
+                <option value="2">Após 2 minutos</option>
+                <option value="5" selected>Após 5 minutos</option>
+                <option value="15">Após 15 minutos</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="primary" id="savePinBtn">Guardar PIN</button>
+            <button type="button" class="secondary" id="enableBioBtn" hidden>👆 Ativar Biometria</button>
+            <button type="button" class="ghost" id="lockNowBtn" hidden>🔒 Bloquear agora</button>
+            <button type="button" class="danger" id="disablePinBtn" hidden>Remover PIN</button>
+          </div>
+        </div>
+
+        <div class="card" style="border-color:rgba(181,71,71,0.35)">
+          <h2 style="color:var(--red)">⚠️ Zona de reinício</h2>
+          <p class="small" style="margin-top:0">Apaga todos os dados guardados neste dispositivo para começar do zero.</p>
+          <button type="button" class="danger" id="resetDatabaseBtn">🗑️ Limpar toda a base de dados</button>
+        </div>
+      </section>
+
+      <footer>UnoFin · v1.0.0 · Gestão financeira pessoal</footer>
+    </main>
+  </div>
+
+  <!-- BOTÃO FLUTUANTE (+) -->
+  <button type="button" class="fab" id="quickAddFab" title="Novo movimento" aria-label="Novo movimento">+</button>
+
+  <!-- GAVETA MOBILE "MAIS" -->
+  <div id="mobileMoreBackdrop" class="mobile-drawer-backdrop" hidden></div>
+  <div id="mobileMoreDrawer" class="mobile-more-drawer" hidden>
+    <div class="drawer-handle"></div>
+    <div class="row" style="margin-bottom:10px">
+      <b>Mais opções</b>
+      <button type="button" class="ghost" id="closeMobileMoreBtn" style="padding:4px 10px">✕</button>
+    </div>
+    <div class="drawer-grid">
+      <button type="button" class="drawer-item" data-drawer-tab="recorrentes"><span class="drawer-ico">🔁</span><span>Encargos</span><span id="drawerRecBadge" class="nav-badge" hidden>0</span></button>
+      <button type="button" class="drawer-item" data-drawer-tab="calendario"><span class="drawer-ico">📅</span><span>Calendário</span></button>
+      <button type="button" class="drawer-item" data-drawer-tab="orcamento"><span class="drawer-ico">⚙️</span><span>Orçamento &amp; Cartões</span></button>
+      <button type="button" class="drawer-item" data-drawer-tab="dados"><span class="drawer-ico">💾</span><span>Dados &amp; Backup</span></button>
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO MOVIMENTO -->
+  <div id="addTxModal" class="modal-backdrop" hidden>
+    <div class="modal-card modal-card-wide">
+      <div class="row" style="margin-bottom:8px">
+        <h2 style="margin:0">Novo movimento</h2>
+        <button type="button" class="ghost" id="closeAddTxModalBtn" style="padding:5px 10px">✕</button>
+      </div>
+
+      <div id="quickTemplatesBar" class="quick-templates-bar" hidden>
+        <div class="quick-templates-head"><span class="small">Atalhos frequentes:</span></div>
+        <div id="quickTemplatesList" class="quick-templates-list"></div>
+      </div>
+
+      <form id="txForm">
+        <div class="grid">
+          <div>
+            <label for="date">Data</label>
+            <input id="date" type="date" required>
+          </div>
+          <div>
+            <label for="type">Tipo de movimento</label>
+            <select id="type">
+              <option value="expense">Despesa</option>
+              <option value="income">Rendimento</option>
+              <option value="saving">Poupança (reforço)</option>
+              <option value="saving_withdraw">Resgate de poupança</option>
+              <option value="cc_payment">Pagamento de cartão</option>
+              <option value="transfer">Transferência interna</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="desc">Descrição</label>
+        <input id="desc" type="text" placeholder="Ex.: Supermercado, Ordenado, Combustível…" required>
+
+        <label for="amount">Valor (€) <span id="calcPreviewBadge" class="calc-preview-badge" hidden></span></label>
+        <div class="calc-input-wrap">
+          <input id="amount" type="text" inputmode="decimal" placeholder="0,00 ou 12,50 + 8,30" required>
+          <div class="calc-ops">
+            <button type="button" class="calc-op-btn" data-calc-op="+">+</button>
+            <button type="button" class="calc-op-btn" data-calc-op="-">−</button>
+            <button type="button" class="calc-op-btn calc-eq-btn" id="calcEvalBtn">=</button>
+          </div>
+        </div>
+
+        <div id="categoryField">
+          <label for="category">Categoria <span id="categoryAutoHint" class="small"></span></label>
+          <select id="category"></select>
+        </div>
+
+        <div id="expensePaymentMethodField">
+          <label for="paymentMethod">Meio de pagamento</label>
+          <select id="paymentMethod"></select>
+          <div id="expenseCcHint" class="small" style="color:var(--amber);margin-top:4px" hidden>💳 Compra a crédito: aumenta a dívida do cartão sem descontar já do saldo bancário.</div>
+        </div>
+
+        <div id="ccPaymentField" hidden>
+          <label for="ccPaymentCard">Cartão a liquidar</label>
+          <select id="ccPaymentCard"></select>
+        </div>
+
+        <div id="savingGoalField" hidden>
+          <label for="savingGoal">Objetivo de poupança associado</label>
+          <select id="savingGoal"></select>
+        </div>
+
+        <div id="transferAccountsField" hidden>
+          <div class="grid">
+            <div>
+              <label for="transferFrom">Conta de origem</label>
+              <input id="transferFrom" type="text" value="Conta Principal">
+            </div>
+            <div>
+              <label for="transferTo">Conta de destino</label>
+              <input id="transferTo" type="text" value="Conta Poupança">
+            </div>
+          </div>
+        </div>
+
+        <div id="incomeCycleField" hidden>
+          <label class="checkbox-row">
+            <input type="checkbox" id="incomeCountsForCycle" checked>
+            <span>Este rendimento abre um novo ciclo financeiro</span>
+          </label>
+        </div>
+
+        <div id="installmentsField">
+          <label class="checkbox-row">
+            <input type="checkbox" id="isInstallment">
+            <span>Dividir em prestações mensais</span>
+          </label>
+          <div id="installmentsOptions" class="inline-editor" hidden>
+            <div class="grid">
+              <div>
+                <label for="installmentCount" style="margin-top:0">N.º de prestações</label>
+                <input id="installmentCount" type="number" min="2" max="60" value="3">
+              </div>
+              <div>
+                <label for="installmentAmountMode" style="margin-top:0">O valor acima é:</label>
+                <select id="installmentAmountMode">
+                  <option value="total">O valor total da compra</option>
+                  <option value="each">O valor de cada prestação</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary">Guardar movimento</button>
+          <button type="button" class="ghost" id="cancelAddTxModalBtn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALHE & EDIÇÃO DE MOVIMENTO -->
+  <div id="txDetailModal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <div class="row">
+        <span id="txModalSubtitle" class="small">Detalhe do movimento</span>
+        <button type="button" class="ghost" id="closeTxModalBtn" style="padding:5px 10px">✕</button>
+      </div>
+      <input type="hidden" id="modalTxId">
+
+      <div id="txModalReadView">
+        <div class="tx-modal-hero">
+          <div id="txModalIcon" class="tx-modal-icon">🧾</div>
+          <div id="txModalAmountDisplay" class="tx-modal-amount">0,00 €</div>
+          <div id="txModalDescDisplay" class="tx-modal-desc"></div>
+        </div>
+        <div class="tx-modal-specs">
+          <div class="tx-spec-row"><span class="small">Data</span><b id="txModalDateDisplay"></b></div>
+          <div class="tx-spec-row"><span class="small">Tipo</span><b id="txModalTypeDisplay"></b></div>
+          <div class="tx-spec-row"><span class="small">Categoria</span><b id="txModalCatDisplay"></b></div>
+          <div id="txModalExtraRow" class="tx-spec-row" hidden><span id="txModalExtraLabel" class="small"></span><b id="txModalExtraDisplay"></b></div>
+        </div>
+
+        <div id="txModalInstallmentBox" class="inline-editor" hidden>
+          <div class="row">
+            <b>Plano de prestações</b>
+            <span id="txModalInstProgressBadge" class="pill"></span>
+          </div>
+          <p id="txModalInstSummaryText" class="small"></p>
+          <div class="actions">
+            <button type="button" class="secondary" id="txModalSettleInstBtn">Liquidar restantes hoje</button>
+            <button type="button" class="danger" id="txModalDeleteFutureInstBtn">Apagar futuras</button>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="primary" id="txModalSwitchEditBtn">✎ Editar</button>
+          <button type="button" class="ghost" id="txModalDuplicateBtn">📋 Duplicar hoje</button>
+          <button type="button" class="danger" id="txModalDeleteBtn">🗑️ Eliminar</button>
+        </div>
+      </div>
+
+      <form id="txModalEditForm" hidden>
+        <div class="grid">
+          <div>
+            <label for="modalEditDate">Data</label>
+            <input id="modalEditDate" type="date" required>
+          </div>
+          <div>
+            <label for="modalEditType">Tipo</label>
+            <select id="modalEditType">
+              <option value="expense">Despesa</option>
+              <option value="income">Rendimento</option>
+              <option value="saving">Poupança</option>
+              <option value="saving_withdraw">Resgate de poupança</option>
+              <option value="cc_payment">Pagamento de cartão</option>
+              <option value="transfer">Transferência interna</option>
+            </select>
+          </div>
+        </div>
+        <label for="modalEditDesc">Descrição</label>
+        <input id="modalEditDesc" type="text" required>
+        <label for="modalEditAmount">Valor (€)</label>
+        <div class="calc-input-wrap">
+          <input id="modalEditAmount" type="text" inputmode="decimal" required>
+          <button type="button" class="calc-op-btn calc-eq-btn" id="modalCalcEvalBtn">=</button>
+        </div>
+
+        <div id="modalEditCatWrap">
+          <label for="modalEditCat">Categoria</label>
+          <select id="modalEditCat"></select>
+        </div>
+        <div id="modalEditPaymentMethodWrap">
+          <label for="modalEditPaymentMethod">Meio de pagamento</label>
+          <select id="modalEditPaymentMethod"></select>
+        </div>
+        <div id="modalEditCcPaymentWrap" hidden>
+          <label for="modalEditCcPaymentCard">Cartão liquidado</label>
+          <select id="modalEditCcPaymentCard"></select>
+        </div>
+        <div id="modalEditGoalWrap" hidden>
+          <label for="modalEditGoal">Objetivo associado</label>
+          <select id="modalEditGoal"></select>
+        </div>
+        <div id="modalEditTransferWrap" hidden>
+          <div class="grid">
+            <div><label for="modalEditTransferFrom">Origem</label><input id="modalEditTransferFrom" type="text"></div>
+            <div><label for="modalEditTransferTo">Destino</label><input id="modalEditTransferTo" type="text"></div>
+          </div>
+        </div>
+        <div id="modalEditIncomeCycleWrap" hidden>
+          <label class="checkbox-row">
+            <input type="checkbox" id="modalEditCountsCycle">
+            <span>Este rendimento abre novo ciclo</span>
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit" class="primary">Guardar</button>
+          <button type="button" class="ghost" id="txModalCancelEditBtn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CADERNO DE ENCARGOS -->
+  <div id="encargoModal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <div class="row">
+        <div>
+          <h2 id="encargoModalTitle" style="margin:0">Fornecedor / Serviço</h2>
+          <div id="encargoModalSubtitle" class="small"></div>
+        </div>
+        <button type="button" class="ghost" id="closeEncargoModalBtn" style="padding:5px 10px">✕</button>
+      </div>
+      <input type="hidden" id="recurrenceId">
+
+      <div id="encargoModalReadView" style="margin-top:10px">
+        <div class="tx-modal-specs">
+          <div class="tx-spec-row"><span class="small">Serviço</span><b id="encargoViewName"></b></div>
+          <div class="tx-spec-row"><span class="small">Categoria</span><b id="encargoViewMeta"></b></div>
+          <div class="tx-spec-row">
+            <span class="small">Entidade MB</span>
+            <div class="row" style="gap:6px"><b id="encargoViewEntity"></b><button type="button" class="ghost" id="encargoCopyEntityBtn" style="padding:2px 7px;font-size:11px">Copiar</button></div>
+          </div>
+          <div class="tx-spec-row">
+            <span class="small">Referência MB</span>
+            <div class="row" style="gap:6px"><b id="encargoViewRef"></b><button type="button" class="ghost" id="encargoCopyRefBtn" style="padding:2px 7px;font-size:11px">Copiar</button></div>
+          </div>
+          <div class="tx-spec-row"><span class="small">Valor habitual</span><b id="encargoViewAmount"></b></div>
+          <div class="tx-spec-row"><span class="small">Dia vencimento</span><b id="encargoViewDay"></b></div>
+        </div>
+        <h3 style="font-size:13.5px;margin:12px 0 6px">Últimos pagamentos registados</h3>
+        <div id="encargoHistoryList" style="border:1px solid var(--line);border-radius:10px"></div>
+        <div class="actions">
+          <button type="button" class="primary" id="encargoSwitchEditBtn">✎ Editar dados</button>
+          <button type="button" class="danger" id="encargoDeleteBtn">🗑️ Remover</button>
+        </div>
+      </div>
+
+      <form id="recurrenceForm" hidden>
+        <label for="recurrenceDescription">Nome do fornecedor / serviço</label>
+        <input id="recurrenceDescription" type="text" placeholder="Ex.: EDP Comercial, Água, Internet…" required>
+        <div class="grid">
+          <div>
+            <label for="recurrenceCategory">Categoria</label>
+            <select id="recurrenceCategory"></select>
+          </div>
+          <div>
+            <label for="recurrenceDay">Dia habitual do mês</label>
+            <input id="recurrenceDay" type="number" min="1" max="31" value="1" required>
+          </div>
+        </div>
+        <div class="grid">
+          <div>
+            <label for="recurrenceEntity">Entidade MB (opcional)</label>
+            <input id="recurrenceEntity" type="text" inputmode="numeric" placeholder="Ex.: 20174">
+          </div>
+          <div>
+            <label for="recurrenceRef">Referência MB (opcional)</label>
+            <input id="recurrenceRef" type="text" inputmode="numeric" placeholder="Ex.: 123 456 789">
+          </div>
+        </div>
+        <label for="recurrenceAmount">Valor habitual (€ — 0 se variável)</label>
+        <input id="recurrenceAmount" type="number" step="0.01" min="0" placeholder="0,00">
+        <div class="actions">
+          <button type="submit" class="primary" id="recurrenceSave">Guardar</button>
+          <button type="button" class="ghost" id="recurrenceCancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: FECHO DE CICLO -->
+  <div id="closeCycleModal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <div class="row">
+        <div>
+          <h2 style="margin:0">🏁 Fecho de ciclo</h2>
+          <div id="closeCycleSubtitle" class="small"></div>
+        </div>
+        <button type="button" class="ghost" id="closeCycleModalXBtn" style="padding:5px 10px">✕</button>
+      </div>
+      <div id="closeCycleAlertBox" class="alert" style="margin-top:10px"></div>
+      <p id="closeCycleExplanation" class="small"></p>
+      <div id="closeCyclePositiveOptions" hidden>
+        <label class="checkbox-row">
+          <input type="radio" name="cycleCloseAction" value="carryover" checked>
+          <span>Transitar sobra para o saldo do ciclo seguinte</span>
+        </label>
+        <label class="checkbox-row">
+          <input type="radio" name="cycleCloseAction" value="savings">
+          <span>Transferir sobra para Poupança</span>
+        </label>
+        <div id="closeCycleGoalWrap" style="padding-left:26px;margin-top:6px" hidden>
+          <select id="closeCycleGoalSelect"></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="primary" id="confirmCloseCycleBtn">Confirmar fecho</button>
+        <button type="button" class="ghost" id="cancelCloseCycleBtn">Agora não</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RECONCILIAÇÃO DE SALDO -->
+  <div id="reconcileModal" class="modal-backdrop" hidden>
+    <div class="modal-card">
+      <div class="row">
+        <h2 style="margin:0">⚖️ Acertar saldo bancário</h2>
+        <button type="button" class="ghost" id="closeReconcileModalBtn" style="padding:5px 10px">✕</button>
+      </div>
+      <p class="small">Compara o saldo calculado na UnoFin com o saldo real da tua conta bancária.</p>
+      <div class="tx-spec-row">
+        <span class="small">Saldo atual na UnoFin</span>
+        <b id="recCurrentAppBal">0,00 €</b>
+      </div>
+      <form id="reconcileForm">
+        <label for="recRealBankBalance">Saldo real no banco (€)</label>
+        <input id="recRealBankBalance" type="number" step="0.01" required placeholder="0,00">
+        <div id="recDiffRow" class="tx-spec-row" style="margin-top:8px" hidden>
+          <span class="small">Movimento de acerto a criar</span>
+          <b id="recDiffPreview">0,00 €</b>
+        </div>
+        <div class="actions">
+          <button type="submit" class="primary">Criar acerto</button>
+          <button type="button" class="ghost" id="cancelReconcileBtn">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BLOQUEIO POR PIN / BIOMETRIA -->
+  <div id="appLockOverlay" class="app-lock-overlay" hidden>
+    <div class="app-lock-box">
+      <div style="font-size:34px;margin-bottom:6px">🔒</div>
+      <h2 style="margin:0 0 4px">UnoFin bloqueada</h2>
+      <p class="small">Introduz o teu PIN local para desbloquear.</p>
+      <input id="appLockPinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••" style="text-align:center;font-size:20px;letter-spacing:6px">
+      <div id="appLockError" class="small" style="color:var(--red);min-height:18px;margin-top:6px"></div>
+      <div class="actions" style="justify-content:center">
+        <button type="button" class="primary" id="appLockUnlockBtn" style="width:100%">Desbloquear</button>
+        <button type="button" class="secondary" id="appLockBioBtn" style="width:100%" hidden>👆 Desbloquear com Biometria</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
